@@ -106,54 +106,36 @@ object ExpressionEvaluator {
     }
 }
 
-object repl {
-  def main(args: Array[String]): Unit = eval()
+sealed trait Term
+case class Assignment(name: String, expression: Expression) extends Term
+case class Expr(expression: Expression) extends Term
+case class Static(content: String) extends Term
 
-  def eval(context: ExpressionEvaluator.Context = ExpressionEvaluator.EmptyContext, count: Int = 0): Unit = {
-    val str = scala.io.StdIn.readLine("> ")
-    if (str != "quit") for {
-      parsed <- ExpressionParser.parse(str)
-      evaluated <- ExpressionEvaluator.eval(parsed, context)
-      result = evaluated match {
-        case (Bool(v), _) => v.toString
-        case (Number(v), _) => v.toString
-        case (Text(v), _) => v
-      }
-      name = s"res$count"
-      _ = println(s"$name := $parsed ( = $result)")
-      nctx = ExpressionEvaluator.put(name, parsed, context)
-    } yield eval(nctx, count + 1)
+object TermEvaluator {
+  type Context = ExpressionEvaluator.Context
+
+  def eval(term: Term, ctx: Context): Either[LanguageError, (String, Context)] =
+    term match {
+      case Assignment(name, expr) =>
+        val updated = ExpressionEvaluator.put(name, expr, ctx)
+        Right(("", updated))
+
+      case Expr(expr) =>
+        ExpressionEvaluator.eval(expr, ctx).flatMap {
+          case (Bool(v), ctx1) => Right((v.toString, ctx1))
+          case (Number(v), ctx1) => Right((v.toString, ctx1))
+          case (Text(v), ctx1) => Right((v, ctx1))
+        }
+
+      case Static(content) =>
+        Right((content, ctx))
+    }
+
+  def compile(terms: List[Term], context: Context): Either[LanguageError, String] = {
+    val start: Either[LanguageError, (String, Context)] = Right(("", context))
+    val rendering = terms.foldLeft(start) {
+      case (acc, term) => acc.flatMap(r => eval(term, r._2).map(e => (r._1 + e._1, e._2)))
+    }
+    rendering.map(_._1)
   }
 }
-
-// sealed trait Term
-// case class Assignment[T](name: String, expression: Expression[T]) extends Term
-// case class Expr[T](expression: Expression[T]) extends Term
-// case class Static(content: String) extends Term
-//
-// object Term {
-//   def eval(term: Term, ctx: Context): (String, Context) =
-//     term match {
-//       case Assignment(name, expression) =>
-//         val value = Expression.eval(expression, ctx)
-//         val updated = ctx.store(name, value)
-//         ("", updated)
-//
-//       case Expr(expression) =>
-//         val value = Expression.eval(expression, ctx)
-//         (value.toString, ctx)
-//
-//       case Static(content) =>
-//         (content, ctx)
-//     }
-//
-//   def compile(terms: List[Term], context: Context): String = {
-//     val start = ("", context)
-//     val (rendered, _) = terms.foldLeft(start) {
-//       case ((result, ctx), term) =>
-//         val (evaluated, updated) = eval(term, ctx)
-//         (result + evaluated, updated)
-//     }
-//     rendered
-//   }
-// }

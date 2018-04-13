@@ -77,28 +77,3 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
     "false" ^^ { _ => Bool(false) }
 
 }
-
-// object TermParser extends StdTokenParsers {
-//   type Tokens = StdLexical
-//
-//   val lexical = new StdLexical
-//   lexical.delimiters ++= Seq("[", "]", "=")
-//
-//   def parse[T](str: String): Term = {
-//     val tokens = new lexical.Scanner(str)
-//     phrase(term[T])(tokens) match {
-//       case Success(parsed, _) => parsed
-//       case NoSuccess(err, _) => throw new Exception("err")
-//     }
-//   }
-//
-//   def term[T]: Parser[Term] =
-//     assignment[T] | expr[T] | static
-//
-//   def assignment[T]: Parser[Assignment[T]] = ???
-//
-//   def expr[T]: Parser[Expr[T]] = ???
-//
-//   def static: Parser[Static] = ???
-//
-// }
