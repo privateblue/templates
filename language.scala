@@ -1,3 +1,5 @@
+package language
+
 sealed trait Value
 case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
@@ -29,14 +31,14 @@ object ExpressionEvaluator {
     name: String,
     ctx: Context,
     prefix: Context = EmptyContext
-  ): Either[LanguageError, (Context, Context)] =
+  ): Result[(Context, Context)] =
     ctx match {
       case Nil => Left(Undefined)
       case (key, expr) :: rest if key == name => Right((prefix, ctx))
       case head :: rest => find(name, rest, prefix :+ head)
     }
 
-  def eval(expr: Expression, ctx: Context): Either[LanguageError, (Value, Context)] =
+  def eval(expr: Expression, ctx: Context): Result[(Value, Context)] =
     expr match {
       case Variable(name) =>
         for {
@@ -114,7 +116,7 @@ case class Static(content: String) extends Term
 object TermEvaluator {
   type Context = ExpressionEvaluator.Context
 
-  def eval(term: Term, ctx: Context): Either[LanguageError, (String, Context)] =
+  def eval(term: Term, ctx: Context): Result[(String, Context)] =
     term match {
       case Assignment(name, expr) =>
         val updated = ExpressionEvaluator.put(name, expr, ctx)
@@ -131,8 +133,8 @@ object TermEvaluator {
         Right((content, ctx))
     }
 
-  def compile(terms: List[Term], context: Context): Either[LanguageError, String] = {
-    val start: Either[LanguageError, (String, Context)] = Right(("", context))
+  def compile(terms: List[Term], context: Context): Result[String] = {
+    val start: Result[(String, Context)] = Right(("", context))
     val rendering = terms.foldLeft(start) {
       case (acc, term) => acc.flatMap(r => eval(term, r._2).map(e => (r._1 + e._1, e._2)))
     }

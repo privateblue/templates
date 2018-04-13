@@ -1,3 +1,5 @@
+package language
+
 import scala.io.Source
 
 object ExpressionRepl {

@@ -1,3 +1,5 @@
+package language
+
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
 import scala.util.parsing.combinator.lexical.StdLexical
 import scala.util.parsing.combinator.PackratParsers
@@ -9,7 +11,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   lexical.delimiters ++= Seq("(", ")", "+", "*")
   lexical.reserved += ("if", "then", "else", "true", "false", "and", "not")
 
-  def parse(str: String): Either[LanguageError, Expression] = {
+  def parse(str: String): Result[Expression] = {
     val tokens = new lexical.Scanner(str)
     phrase(expression)(tokens) match {
       case Success(parsed, _) => Right(parsed)

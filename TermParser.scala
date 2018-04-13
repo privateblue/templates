@@ -1,3 +1,5 @@
+package language
+
 import org.parboiled2._
 
 import cats.instances.list._
@@ -12,8 +14,6 @@ case class PExpr(expression: String) extends PTerm
 case class PStatic(content: String) extends PTerm
 
 object TermParser {
-  type Result[T] = Either[LanguageError, T]
-
   def parse(str: String): Result[List[Term]] = {
     val parser = new TermParser(str)
     parser.terms.run() match {
