@@ -44,10 +44,6 @@ class TermParser(val input: ParserInput) extends Parser {
     assignment | expr | static
   }
 
-  // implicit def wspStr(s: String): Rule0 = rule {
-  //   str(s) ~ zeroOrMore(' ')
-  // }
-
   def assignment: Rule1[PAssignment] = rule {
     "[" ~ ws ~ capture(ident) ~ ws ~ "=" ~ ws ~ capture(expression) ~ ws ~ "]" ~> PAssignment
   }
