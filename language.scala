@@ -1,4 +1,4 @@
-package language
+package templates
 
 sealed trait Value
 case class Bool(underlying: Boolean) extends Value

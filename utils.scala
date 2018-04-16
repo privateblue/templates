@@ -1,4 +1,4 @@
-package language
+package templates
 
 import scala.io.Source
 import scala.scalajs.js.annotation._

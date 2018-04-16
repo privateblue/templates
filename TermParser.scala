@@ -1,4 +1,4 @@
-package language
+package templates
 
 import org.parboiled2._
 

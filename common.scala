@@ -1,4 +1,4 @@
-package object language {
+package object templates {
   sealed trait LanguageError {
     val msg: String
   }

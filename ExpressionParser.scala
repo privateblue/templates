@@ -1,4 +1,4 @@
-package language
+package templates
 
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
 import scala.util.parsing.combinator.lexical.StdLexical

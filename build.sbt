@@ -1,4 +1,4 @@
-name := "language"
+name := "templates"
 
 scalaVersion := "2.12.4"
 
