@@ -1,1 +1,5 @@
-target
+project/*
+target/*
+!target/scala-2.12
+target/scala-2.12/*
+!target/scala-2.12/templates-fastopt.js
