@@ -18,7 +18,7 @@ object TermParser {
     val parser = new TermParser(str)
     parser.terms.run() match {
       case Success(terms) => parseExpressions(terms)
-      case Failure(err) => Left(SyntaxError)
+      case Failure(err) => Left(SyntaxError(err.getMessage))
     }
   }
 

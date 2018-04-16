@@ -15,7 +15,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
     val tokens = new lexical.Scanner(str)
     phrase(expression)(tokens) match {
       case Success(parsed, _) => Right(parsed)
-      case NoSuccess(err, _) => Left(SyntaxError)
+      case NoSuccess(err, _) => Left(SyntaxError(err))
     }
   }
 

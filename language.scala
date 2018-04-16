@@ -14,11 +14,6 @@ case class Mult(left: Expression, right: Expression) extends Expression
 case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
 
-sealed trait LanguageError
-case object SyntaxError extends LanguageError
-case object Undefined extends LanguageError
-case object TypeError extends LanguageError
-
 object ExpressionEvaluator {
   type Context = List[(String, Expression)]
 
@@ -33,7 +28,7 @@ object ExpressionEvaluator {
     prefix: Context = EmptyContext
   ): Result[(Context, Context)] =
     ctx match {
-      case Nil => Left(Undefined)
+      case Nil => Left(Undefined(s"Variable $name not found"))
       case (key, expr) :: rest if key == name => Right((prefix, ctx))
       case head :: rest => find(name, rest, prefix :+ head)
     }
@@ -59,7 +54,7 @@ object ExpressionEvaluator {
           (cond, ctx1) = condEval
           c <- cond match {
             case Bool(b) => Right(b)
-            case _ => Left(TypeError)
+            case _ => Left(TypeError("Bool expected in If"))
           }
           result <- if (c) eval(yes, ctx1) else eval(no, ctx1)
         } yield result
@@ -72,7 +67,7 @@ object ExpressionEvaluator {
           (r, ctx2) = rightEval
           result <- (l, r) match {
             case (Number(n), Number(m)) => Right((Number(n + m), ctx2))
-            case _ => Left(TypeError)
+            case _ => Left(TypeError("Numbers expected in Add"))
           }
         } yield result
 
@@ -84,7 +79,7 @@ object ExpressionEvaluator {
           (r, ctx2) = rightEval
           result <- (l, r) match {
             case (Number(n), Number(m)) => Right((Number(n * m), ctx2))
-            case _ => Left(TypeError)
+            case _ => Left(TypeError("Numbers expected in Mult"))
           }
         } yield result
 
@@ -96,14 +91,14 @@ object ExpressionEvaluator {
           (r, ctx2) = rightEval
           result <- (l, r) match {
             case (Bool(n), Bool(m)) => Right((Bool(n && m), ctx2))
-            case _ => Left(TypeError)
+            case _ => Left(TypeError("Bools expected in And"))
           }
         } yield result
 
       case Not(expr) =>
         eval(expr, ctx).flatMap {
           case (Bool(b), ctx1) => Right((Bool(!b), ctx1))
-          case _ => Left(TypeError)
+          case _ => Left(TypeError("Bool expected in Not"))
         }
     }
 }
