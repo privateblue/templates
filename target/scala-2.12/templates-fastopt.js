@@ -21064,15 +21064,22 @@ $h_Ltemplates_TermParser.prototype = $c_Ltemplates_TermParser.prototype;
 $c_Ltemplates_TermParser.prototype.rec$5__p3__J__J = (function(mark) {
   _rec: while (true) {
     try {
-      var matched = ((this.$$und$undmatchNoneOf__T__I__Z("[]", 0) && this.$$und$undupdateMaxCursor__Z()) || this.$$und$undregisterMismatch__Z())
+      var this$3 = $m_Lorg_parboiled2_CharPredicate$().Alpha$1;
+      var c = this.$$undcursorChar$2;
+      if (((this$3.apply__C__Z(c) && this.$$und$undadvance__Z()) && this.$$und$undupdateMaxCursor__Z())) {
+        var matched = true
+      } else {
+        var matched = this.$$und$undregisterMismatch__Z()
+      }
     } catch (e) {
       var matched;
       var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
       if ((e$2 !== null)) {
         var x$2 = $m_Lorg_parboiled2_Parser$StartTracingException$();
         if ((x$2 === e$2)) {
-          var terminal = new $c_Lorg_parboiled2_RuleTrace$NoneOf().init___T("[]");
-          this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$($m_sci_Nil$(), terminal)
+          var x$7 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("Alpha"), 0);
+          var this$5 = $m_sci_Nil$();
+          this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$7, this$5), new $c_Lorg_parboiled2_RuleTrace$CharPredicateMatch().init___Lorg_parboiled2_CharPredicate($m_Lorg_parboiled2_CharPredicate$().Alpha$1))
         } else {
           throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
         }
@@ -21088,66 +21095,126 @@ $c_Ltemplates_TermParser.prototype.rec$5__p3__J__J = (function(mark) {
     }
   }
 });
+$c_Ltemplates_TermParser.prototype.liftedTree10$1__p3__Z = (function() {
+  try {
+    return this.$$und$undregisterMismatch__Z()
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
+      if ((x === e$2)) {
+        var x$10 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("\t"), 0);
+        var this$1 = $m_sci_Nil$();
+        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$10, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(9))
+      } else {
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      throw e
+    }
+  }
+});
 $c_Ltemplates_TermParser.prototype.wrapped$7__p3__Z = (function() {
   var start = this.org$parboiled2$Parser$$$undcursor$2;
   try {
     var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
     try {
-      var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
-      try {
-        var t = this.$$und$undsaveState__J();
-        var lo = t.lo$2;
-        var hi = t.hi$2;
-        var t$1 = this.rec$7__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
-        var lo$1 = t$1.lo$2;
-        var hi$1 = t$1.hi$2;
-        var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
-      } catch (e) {
-        var matched;
-        if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
-          var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
-          e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$OneOrMore$(), start$3)
-        } else {
-          throw e
-        }
-      };
-      return (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$2, this.org$parboiled2$Parser$$$undcursor$2)), true))
-    } catch (e$3) {
-      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
-        var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
-        e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$2)
+      var t = this.$$und$undsaveState__J();
+      var lo = t.lo$2;
+      var hi = t.hi$2;
+      var t$1 = this.rec$7__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
+      var lo$1 = t$1.lo$2;
+      var hi$1 = t$1.hi$2;
+      return ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
+    } catch (e) {
+      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+        var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+        e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$OneOrMore$(), start$2)
       } else {
-        throw e$3
+        throw e
       }
     }
-  } catch (e$5) {
-    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$5)) {
-      var e$6 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$5);
-      e$6.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("expression"), start)
+  } catch (e$3) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
+      var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
+      e$4.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("expression"), start)
     } else {
-      throw e$5
+      throw e$3
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.liftedTree5$1__p3__Z = (function() {
+  try {
+    return this.$$und$undregisterMismatch__Z()
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
+      if ((x === e$2)) {
+        var x$5 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("["), 0);
+        var this$1 = $m_sci_Nil$();
+        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$5, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(91))
+      } else {
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      throw e
     }
   }
 });
 $c_Ltemplates_TermParser.prototype.ident__Lorg_parboiled2_Rule = (function() {
   if (this.$$und$undinErrorAnalysis__Z()) {
-    var matched$2 = this.wrapped$4__p3__Z()
+    var matched = this.wrapped$6__p3__Z()
   } else {
-    var start = this.org$parboiled2$Parser$$$undcursor$2;
     var t = this.$$und$undsaveState__J();
     var lo = t.lo$2;
     var hi = t.hi$2;
-    var t$1 = this.rec$4__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
+    var t$1 = this.rec$6__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
     var lo$1 = t$1.lo$2;
     var hi$1 = t$1.hi$2;
-    var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true));
-    var matched$2 = (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start, this.org$parboiled2$Parser$$$undcursor$2)), true))
+    var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
   };
-  return $as_Lorg_parboiled2_Rule((matched$2 ? $m_Lorg_parboiled2_Rule$() : null))
+  return (matched ? $m_Lorg_parboiled2_Rule$() : null)
 });
 $c_Ltemplates_TermParser.prototype.rec$6__p3__J__J = (function(mark) {
   _rec: while (true) {
-    var matched = this.$$und$undmatchNoneOf__T__I__Z("[]", 0);
+    var this$3 = $m_Lorg_parboiled2_CharPredicate$().Alpha$1;
+    var c = this.$$undcursorChar$2;
+    if (this$3.apply__C__Z(c)) {
+      var matched = this.$$und$undadvance__Z()
+    } else {
+      var matched = false
+    };
+    if (matched) {
+      mark = this.$$und$undsaveState__J();
+      continue _rec
+    } else {
+      return mark
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.liftedTree2$1__p3__I__Z = (function(start$1) {
+  try {
+    var matched = (this.ident__Lorg_parboiled2_Rule() !== null);
+    return (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$1, this.org$parboiled2$Parser$$$undcursor$2)), true))
+  } catch (e) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+      var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+      e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$1)
+    } else {
+      throw e
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.rec$10__p3__J__J = (function(mark) {
+  _rec: while (true) {
+    var t = this.$$und$undsaveState__J();
+    var lo = t.lo$2;
+    var hi = t.hi$2;
+    var l = ((this.$$undcursorChar$2 === 32) && (this.$$und$undadvance__Z(), true));
+    var l$2 = (l || (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo, hi)), ((this.$$undcursorChar$2 === 10) && (this.$$und$undadvance__Z(), true))));
+    var l$3 = (l$2 || (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo, hi)), ((this.$$undcursorChar$2 === 9) && (this.$$und$undadvance__Z(), true))));
+    var matched = (l$3 || (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo, hi)), ((this.$$undcursorChar$2 === 13) && (this.$$und$undadvance__Z(), true))));
     if (matched) {
       mark = this.$$und$undsaveState__J();
       continue _rec
@@ -21162,19 +21229,33 @@ $c_Ltemplates_TermParser.prototype.wrapped$3__p3__Z = (function() {
     var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
     try {
       var l = ((this.$$undcursorChar$2 === 91) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree1$1__p3__Z());
-      var l$2 = (l && (this.ident__Lorg_parboiled2_Rule() !== null));
-      var l$3 = (l$2 && ((this.$$undcursorChar$2 === 61) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree2$1__p3__Z()));
-      var l$4 = (l$3 && (this.expression__Lorg_parboiled2_Rule() !== null));
-      if (l$4) {
+      var l$2 = (l && (this.ws__Lorg_parboiled2_Rule() !== null));
+      if (l$2) {
+        var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
+        var l$3 = this.liftedTree2$1__p3__I__Z(start$3)
+      } else {
+        var l$3 = false
+      };
+      var l$4 = (l$3 && (this.ws__Lorg_parboiled2_Rule() !== null));
+      var l$5 = (l$4 && ((this.$$undcursorChar$2 === 61) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree3$1__p3__Z()));
+      var l$6 = (l$5 && (this.ws__Lorg_parboiled2_Rule() !== null));
+      if (l$6) {
+        var start$4 = this.org$parboiled2$Parser$$$undcursor$2;
+        var l$7 = this.liftedTree4$1__p3__I__Z(start$4)
+      } else {
+        var l$7 = false
+      };
+      var l$8 = (l$7 && (this.ws__Lorg_parboiled2_Rule() !== null));
+      if (l$8) {
         if ((this.$$undcursorChar$2 === 93)) {
           this.$$und$undadvance__Z();
           this.$$und$undupdateMaxCursor__Z();
-          var l$5 = true
+          var l$9 = true
         } else {
           try {
-            var l$5 = this.$$und$undregisterMismatch__Z()
+            var l$9 = this.$$und$undregisterMismatch__Z()
           } catch (e) {
-            var l$5;
+            var l$9;
             var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
             if ((e$2 !== null)) {
               var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
@@ -21191,10 +21272,10 @@ $c_Ltemplates_TermParser.prototype.wrapped$3__p3__Z = (function() {
           }
         }
       } else {
-        var l$5 = false
+        var l$9 = false
       };
-      if (l$5) {
-        var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
+      if (l$9) {
+        var start$5 = this.org$parboiled2$Parser$$$undcursor$2;
         try {
           var value1 = $as_T(this.$$undvalueStack$2.pop__O());
           var value0 = $as_T(this.$$undvalueStack$2.pop__O());
@@ -21202,7 +21283,7 @@ $c_Ltemplates_TermParser.prototype.wrapped$3__p3__Z = (function() {
         } catch (e$3) {
           if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
             var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
-            e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Action$(), start$3)
+            e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Action$(), start$5)
           } else {
             throw e$3
           }
@@ -21275,9 +21356,9 @@ $c_Ltemplates_TermParser.prototype.liftedTree3$1__p3__Z = (function() {
     if ((e$2 !== null)) {
       var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
       if ((x === e$2)) {
-        var x$6 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("["), 0);
+        var x$3 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("="), 0);
         var this$1 = $m_sci_Nil$();
-        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$6, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(91))
+        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$3, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(61))
       } else {
         throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
       }
@@ -21291,50 +21372,45 @@ $c_Ltemplates_TermParser.prototype.wrapped$6__p3__Z = (function() {
   try {
     var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
     try {
-      var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
-      try {
-        var start$4 = this.org$parboiled2$Parser$$$undcursor$2;
-        var matched = this.liftedTree4$1__p3__I__Z(start$4);
-        var l = (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$3, this.org$parboiled2$Parser$$$undcursor$2)), true))
-      } catch (e) {
-        var l;
-        if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
-          var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
-          e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$3)
-        } else {
-          throw e
-        }
-      };
-      if (l) {
-        var start$5 = this.org$parboiled2$Parser$$$undcursor$2;
-        try {
-          var value0 = $as_T(this.$$undvalueStack$2.pop__O());
-          return this.$$und$undpush__O__Z(new $c_Ltemplates_PStatic().init___T(value0))
-        } catch (e$3) {
-          if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
-            var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
-            e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Action$(), start$5)
-          } else {
-            throw e$3
-          }
-        }
+      var t = this.$$und$undsaveState__J();
+      var lo = t.lo$2;
+      var hi = t.hi$2;
+      var t$1 = this.rec$5__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
+      var lo$1 = t$1.lo$2;
+      var hi$1 = t$1.hi$2;
+      return ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
+    } catch (e) {
+      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+        var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+        e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$OneOrMore$(), start$2)
       } else {
-        return false
-      }
-    } catch (e$5) {
-      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$5)) {
-        var e$6 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$5);
-        e$6.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Sequence$(), start$2)
-      } else {
-        throw e$5
+        throw e
       }
     }
-  } catch (e$7) {
-    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$7)) {
-      var e$8 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$7);
-      e$8.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("static"), start)
+  } catch (e$3) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
+      var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
+      e$4.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("ident"), start)
     } else {
-      throw e$7
+      throw e$3
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.liftedTree7$1__p3__I__Z = (function(start$4) {
+  try {
+    var t = this.$$und$undsaveState__J();
+    var lo = t.lo$2;
+    var hi = t.hi$2;
+    var t$1 = this.rec$3__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
+    var lo$1 = t$1.lo$2;
+    var hi$1 = t$1.hi$2;
+    return ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
+  } catch (e) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+      var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+      e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$OneOrMore$(), start$4)
+    } else {
+      throw e
     }
   }
 });
@@ -21362,6 +21438,25 @@ $c_Ltemplates_TermParser.prototype.rec$7__p3__J__J = (function(mark) {
       continue _rec
     } else {
       return mark
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.liftedTree9$1__p3__Z = (function() {
+  try {
+    return this.$$und$undregisterMismatch__Z()
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
+      if ((x === e$2)) {
+        var x$9 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("\n"), 0);
+        var this$1 = $m_sci_Nil$();
+        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$9, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(10))
+      } else {
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      throw e
     }
   }
 });
@@ -21461,22 +21556,15 @@ $c_Ltemplates_TermParser.prototype.wrapped$1__p3__Z = (function() {
 $c_Ltemplates_TermParser.prototype.rec$3__p3__J__J = (function(mark) {
   _rec: while (true) {
     try {
-      var this$3 = $m_Lorg_parboiled2_CharPredicate$().Alpha$1;
-      var c = this.$$undcursorChar$2;
-      if (((this$3.apply__C__Z(c) && this.$$und$undadvance__Z()) && this.$$und$undupdateMaxCursor__Z())) {
-        var matched = true
-      } else {
-        var matched = this.$$und$undregisterMismatch__Z()
-      }
+      var matched = ((this.$$und$undmatchNoneOf__T__I__Z("[]", 0) && this.$$und$undupdateMaxCursor__Z()) || this.$$und$undregisterMismatch__Z())
     } catch (e) {
       var matched;
       var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
       if ((e$2 !== null)) {
         var x$2 = $m_Lorg_parboiled2_Parser$StartTracingException$();
         if ((x$2 === e$2)) {
-          var x$5 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("Alpha"), 0);
-          var this$5 = $m_sci_Nil$();
-          this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$5, this$5), new $c_Lorg_parboiled2_RuleTrace$CharPredicateMatch().init___Lorg_parboiled2_CharPredicate($m_Lorg_parboiled2_CharPredicate$().Alpha$1))
+          var terminal = new $c_Lorg_parboiled2_RuleTrace$NoneOf().init___T("[]");
+          this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$($m_sci_Nil$(), terminal)
         } else {
           throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
         }
@@ -21511,7 +21599,133 @@ $c_Ltemplates_TermParser.prototype.liftedTree1$1__p3__Z = (function() {
     }
   }
 });
-$c_Ltemplates_TermParser.prototype.liftedTree2$1__p3__Z = (function() {
+$c_Ltemplates_TermParser.prototype.wrapped$5__p3__Z = (function() {
+  var start = this.org$parboiled2$Parser$$$undcursor$2;
+  try {
+    var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
+    try {
+      var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
+      try {
+        var start$4 = this.org$parboiled2$Parser$$$undcursor$2;
+        var matched = this.liftedTree7$1__p3__I__Z(start$4);
+        var l = (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$3, this.org$parboiled2$Parser$$$undcursor$2)), true))
+      } catch (e) {
+        var l;
+        if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+          var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+          e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$3)
+        } else {
+          throw e
+        }
+      };
+      if (l) {
+        var start$5 = this.org$parboiled2$Parser$$$undcursor$2;
+        try {
+          var value0 = $as_T(this.$$undvalueStack$2.pop__O());
+          return this.$$und$undpush__O__Z(new $c_Ltemplates_PStatic().init___T(value0))
+        } catch (e$3) {
+          if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
+            var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
+            e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Action$(), start$5)
+          } else {
+            throw e$3
+          }
+        }
+      } else {
+        return false
+      }
+    } catch (e$5) {
+      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$5)) {
+        var e$6 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$5);
+        e$6.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Sequence$(), start$2)
+      } else {
+        throw e$5
+      }
+    }
+  } catch (e$7) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$7)) {
+      var e$8 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$7);
+      e$8.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("static"), start)
+    } else {
+      throw e$7
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.liftedTree6$1__p3__I__Z = (function(start$3) {
+  try {
+    var matched = (this.expression__Lorg_parboiled2_Rule() !== null);
+    return (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$3, this.org$parboiled2$Parser$$$undcursor$2)), true))
+  } catch (e) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+      var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+      e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$3)
+    } else {
+      throw e
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.rec$9__p3__J__J = (function(mark) {
+  _rec: while (true) {
+    var start = this.org$parboiled2$Parser$$$undcursor$2;
+    try {
+      var t = this.$$und$undsaveState__J();
+      var lo = t.lo$2;
+      var hi = t.hi$2;
+      var l = ((this.$$undcursorChar$2 === 32) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree8$1__p3__Z());
+      var l$2 = (l || (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo, hi)), ((this.$$undcursorChar$2 === 10) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree9$1__p3__Z())));
+      var l$3 = (l$2 || (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo, hi)), ((this.$$undcursorChar$2 === 9) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree10$1__p3__Z())));
+      if (l$3) {
+        var matched = true
+      } else {
+        this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
+        if ((this.$$undcursorChar$2 === 13)) {
+          this.$$und$undadvance__Z();
+          this.$$und$undupdateMaxCursor__Z();
+          var matched = true
+        } else {
+          try {
+            var matched = this.$$und$undregisterMismatch__Z()
+          } catch (e) {
+            var matched;
+            var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+            if ((e$2 !== null)) {
+              var x$2 = $m_Lorg_parboiled2_Parser$StartTracingException$();
+              if ((x$2 === e$2)) {
+                var x$11 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("\r"), 0);
+                var this$1 = $m_sci_Nil$();
+                this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$11, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(13))
+              } else {
+                throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+              }
+            } else {
+              throw e
+            }
+          }
+        }
+      }
+    } catch (e$3) {
+      var matched;
+      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
+        var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
+        e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$FirstOf$(), start)
+      } else {
+        throw e$3
+      }
+    };
+    if (matched) {
+      mark = this.$$und$undsaveState__J();
+      continue _rec
+    } else {
+      return mark
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.init___Lorg_parboiled2_ParserInput = (function(input) {
+  this.input$3 = input;
+  $c_Lorg_parboiled2_Parser.prototype.init___I__I.call(this, 16, 1024);
+  return this
+});
+$c_Ltemplates_TermParser.prototype.liftedTree8$1__p3__Z = (function() {
   try {
     return this.$$und$undregisterMismatch__Z()
   } catch (e) {
@@ -21519,9 +21733,9 @@ $c_Ltemplates_TermParser.prototype.liftedTree2$1__p3__Z = (function() {
     if ((e$2 !== null)) {
       var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
       if ((x === e$2)) {
-        var x$3 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("="), 0);
+        var x$8 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T(" "), 0);
         var this$1 = $m_sci_Nil$();
-        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$3, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(61))
+        this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$8, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(32))
       } else {
         throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
       }
@@ -21530,30 +21744,50 @@ $c_Ltemplates_TermParser.prototype.liftedTree2$1__p3__Z = (function() {
     }
   }
 });
-$c_Ltemplates_TermParser.prototype.wrapped$5__p3__Z = (function() {
+$c_Ltemplates_TermParser.prototype.liftedTree4$1__p3__I__Z = (function(start$2) {
+  try {
+    var matched = (this.expression__Lorg_parboiled2_Rule() !== null);
+    return (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$2, this.org$parboiled2$Parser$$$undcursor$2)), true))
+  } catch (e) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+      var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+      e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$2)
+    } else {
+      throw e
+    }
+  }
+});
+$c_Ltemplates_TermParser.prototype.wrapped$4__p3__Z = (function() {
   var start = this.org$parboiled2$Parser$$$undcursor$2;
   try {
     var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
     try {
-      var l = ((this.$$undcursorChar$2 === 91) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree3$1__p3__Z());
-      var l$2 = (l && (this.expression__Lorg_parboiled2_Rule() !== null));
+      var l = ((this.$$undcursorChar$2 === 91) ? (this.$$und$undadvance__Z(), this.$$und$undupdateMaxCursor__Z(), true) : this.liftedTree5$1__p3__Z());
+      var l$2 = (l && (this.ws__Lorg_parboiled2_Rule() !== null));
       if (l$2) {
+        var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
+        var l$3 = this.liftedTree6$1__p3__I__Z(start$3)
+      } else {
+        var l$3 = false
+      };
+      var l$4 = (l$3 && (this.ws__Lorg_parboiled2_Rule() !== null));
+      if (l$4) {
         if ((this.$$undcursorChar$2 === 93)) {
           this.$$und$undadvance__Z();
           this.$$und$undupdateMaxCursor__Z();
-          var l$3 = true
+          var l$5 = true
         } else {
           try {
-            var l$3 = this.$$und$undregisterMismatch__Z()
+            var l$5 = this.$$und$undregisterMismatch__Z()
           } catch (e) {
-            var l$3;
+            var l$5;
             var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
             if ((e$2 !== null)) {
               var x = $m_Lorg_parboiled2_Parser$StartTracingException$();
               if ((x === e$2)) {
-                var x$7 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("]"), 0);
+                var x$6 = new $c_Lorg_parboiled2_RuleTrace$NonTerminal().init___Lorg_parboiled2_RuleTrace$NonTerminalKey__I(new $c_Lorg_parboiled2_RuleTrace$StringMatch().init___T("]"), 0);
                 var this$1 = $m_sci_Nil$();
-                this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$7, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(93))
+                this.$$und$undbubbleUp__sci_List__Lorg_parboiled2_RuleTrace$Terminal__sr_Nothing$(new $c_sci_$colon$colon().init___O__sci_List(x$6, this$1), new $c_Lorg_parboiled2_RuleTrace$CharMatch().init___C(93))
               } else {
                 throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
               }
@@ -21563,17 +21797,17 @@ $c_Ltemplates_TermParser.prototype.wrapped$5__p3__Z = (function() {
           }
         }
       } else {
-        var l$3 = false
+        var l$5 = false
       };
-      if (l$3) {
-        var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
+      if (l$5) {
+        var start$4 = this.org$parboiled2$Parser$$$undcursor$2;
         try {
           var value0 = $as_T(this.$$undvalueStack$2.pop__O());
           return this.$$und$undpush__O__Z(new $c_Ltemplates_PExpr().init___T(value0))
         } catch (e$3) {
           if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
             var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
-            e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Action$(), start$3)
+            e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Action$(), start$4)
           } else {
             throw e$3
           }
@@ -21598,120 +21832,102 @@ $c_Ltemplates_TermParser.prototype.wrapped$5__p3__Z = (function() {
     }
   }
 });
-$c_Ltemplates_TermParser.prototype.init___Lorg_parboiled2_ParserInput = (function(input) {
-  this.input$3 = input;
-  $c_Lorg_parboiled2_Parser.prototype.init___I__I.call(this, 16, 1024);
-  return this
-});
-$c_Ltemplates_TermParser.prototype.liftedTree4$1__p3__I__Z = (function(start$1) {
-  try {
-    var t = this.$$und$undsaveState__J();
-    var lo = t.lo$2;
-    var hi = t.hi$2;
-    var t$1 = this.rec$5__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
-    var lo$1 = t$1.lo$2;
-    var hi$1 = t$1.hi$2;
-    return ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
-  } catch (e) {
-    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
-      var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
-      e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$OneOrMore$(), start$1)
-    } else {
-      throw e
-    }
-  }
-});
-$c_Ltemplates_TermParser.prototype.wrapped$4__p3__Z = (function() {
-  var start = this.org$parboiled2$Parser$$$undcursor$2;
-  try {
-    var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
-    try {
-      var start$3 = this.org$parboiled2$Parser$$$undcursor$2;
-      try {
-        var t = this.$$und$undsaveState__J();
-        var lo = t.lo$2;
-        var hi = t.hi$2;
-        var t$1 = this.rec$3__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
-        var lo$1 = t$1.lo$2;
-        var hi$1 = t$1.hi$2;
-        var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
-      } catch (e) {
-        var matched;
-        if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
-          var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
-          e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$OneOrMore$(), start$3)
-        } else {
-          throw e
-        }
-      };
-      return (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$2, this.org$parboiled2$Parser$$$undcursor$2)), true))
-    } catch (e$3) {
-      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
-        var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
-        e$4.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$Capture$(), start$2)
-      } else {
-        throw e$3
-      }
-    }
-  } catch (e$5) {
-    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$5)) {
-      var e$6 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$5);
-      e$6.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("ident"), start)
-    } else {
-      throw e$5
-    }
-  }
-});
 $c_Ltemplates_TermParser.prototype.expression__Lorg_parboiled2_Rule = (function() {
   if (this.$$und$undinErrorAnalysis__Z()) {
-    var matched$2 = this.wrapped$7__p3__Z()
+    var matched = this.wrapped$7__p3__Z()
   } else {
-    var start = this.org$parboiled2$Parser$$$undcursor$2;
     var t = this.$$und$undsaveState__J();
     var lo = t.lo$2;
     var hi = t.hi$2;
     var t$1 = this.rec$8__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
     var lo$1 = t$1.lo$2;
     var hi$1 = t$1.hi$2;
-    var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true));
-    var matched$2 = (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start, this.org$parboiled2$Parser$$$undcursor$2)), true))
+    var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true))
   };
-  return $as_Lorg_parboiled2_Rule((matched$2 ? $m_Lorg_parboiled2_Rule$() : null))
+  return (matched ? $m_Lorg_parboiled2_Rule$() : null)
 });
 $c_Ltemplates_TermParser.prototype.expr__Lorg_parboiled2_Rule = (function() {
   if (this.$$und$undinErrorAnalysis__Z()) {
-    var matched = this.wrapped$5__p3__Z()
+    var matched$2 = this.wrapped$4__p3__Z()
   } else {
     var l = ((this.$$undcursorChar$2 === 91) && (this.$$und$undadvance__Z(), true));
-    var l$2 = (l && (this.expression__Lorg_parboiled2_Rule() !== null));
-    var l$3 = (l$2 && ((this.$$undcursorChar$2 === 93) && (this.$$und$undadvance__Z(), true)));
-    if (l$3) {
-      var value0 = $as_T(this.$$undvalueStack$2.pop__O());
-      var matched = this.$$und$undpush__O__Z(new $c_Ltemplates_PExpr().init___T(value0))
+    var l$2 = (l && (this.ws__Lorg_parboiled2_Rule() !== null));
+    if (l$2) {
+      var start = this.org$parboiled2$Parser$$$undcursor$2;
+      var matched = (this.expression__Lorg_parboiled2_Rule() !== null);
+      var l$3 = (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start, this.org$parboiled2$Parser$$$undcursor$2)), true))
     } else {
-      var matched = false
+      var l$3 = false
+    };
+    var l$4 = (l$3 && (this.ws__Lorg_parboiled2_Rule() !== null));
+    var l$5 = (l$4 && ((this.$$undcursorChar$2 === 93) && (this.$$und$undadvance__Z(), true)));
+    if (l$5) {
+      var value0 = $as_T(this.$$undvalueStack$2.pop__O());
+      var matched$2 = this.$$und$undpush__O__Z(new $c_Ltemplates_PExpr().init___T(value0))
+    } else {
+      var matched$2 = false
     }
   };
-  return $as_Lorg_parboiled2_Rule((matched ? $m_Lorg_parboiled2_Rule$() : null))
+  return $as_Lorg_parboiled2_Rule((matched$2 ? $m_Lorg_parboiled2_Rule$() : null))
 });
 $c_Ltemplates_TermParser.prototype.assignment__Lorg_parboiled2_Rule = (function() {
   if (this.$$und$undinErrorAnalysis__Z()) {
-    var matched = this.wrapped$3__p3__Z()
+    var matched$3 = this.wrapped$3__p3__Z()
   } else {
     var l = ((this.$$undcursorChar$2 === 91) && (this.$$und$undadvance__Z(), true));
-    var l$2 = (l && (this.ident__Lorg_parboiled2_Rule() !== null));
-    var l$3 = (l$2 && ((this.$$undcursorChar$2 === 61) && (this.$$und$undadvance__Z(), true)));
-    var l$4 = (l$3 && (this.expression__Lorg_parboiled2_Rule() !== null));
-    var l$5 = (l$4 && ((this.$$undcursorChar$2 === 93) && (this.$$und$undadvance__Z(), true)));
-    if (l$5) {
+    var l$2 = (l && (this.ws__Lorg_parboiled2_Rule() !== null));
+    if (l$2) {
+      var start = this.org$parboiled2$Parser$$$undcursor$2;
+      var matched = (this.ident__Lorg_parboiled2_Rule() !== null);
+      var l$3 = (matched && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start, this.org$parboiled2$Parser$$$undcursor$2)), true))
+    } else {
+      var l$3 = false
+    };
+    var l$4 = (l$3 && (this.ws__Lorg_parboiled2_Rule() !== null));
+    var l$5 = (l$4 && ((this.$$undcursorChar$2 === 61) && (this.$$und$undadvance__Z(), true)));
+    var l$6 = (l$5 && (this.ws__Lorg_parboiled2_Rule() !== null));
+    if (l$6) {
+      var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
+      var matched$2 = (this.expression__Lorg_parboiled2_Rule() !== null);
+      var l$7 = (matched$2 && (this.$$undvalueStack$2.push__O__V(this.input$3.sliceString__I__I__T(start$2, this.org$parboiled2$Parser$$$undcursor$2)), true))
+    } else {
+      var l$7 = false
+    };
+    var l$8 = (l$7 && (this.ws__Lorg_parboiled2_Rule() !== null));
+    var l$9 = (l$8 && ((this.$$undcursorChar$2 === 93) && (this.$$und$undadvance__Z(), true)));
+    if (l$9) {
       var value1 = $as_T(this.$$undvalueStack$2.pop__O());
       var value0 = $as_T(this.$$undvalueStack$2.pop__O());
-      var matched = this.$$und$undpush__O__Z(new $c_Ltemplates_PAssignment().init___T__T(value0, value1))
+      var matched$3 = this.$$und$undpush__O__Z(new $c_Ltemplates_PAssignment().init___T__T(value0, value1))
     } else {
-      var matched = false
+      var matched$3 = false
     }
   };
-  return $as_Lorg_parboiled2_Rule((matched ? $m_Lorg_parboiled2_Rule$() : null))
+  return $as_Lorg_parboiled2_Rule((matched$3 ? $m_Lorg_parboiled2_Rule$() : null))
+});
+$c_Ltemplates_TermParser.prototype.wrapped$8__p3__Z = (function() {
+  var start = this.org$parboiled2$Parser$$$undcursor$2;
+  try {
+    var start$2 = this.org$parboiled2$Parser$$$undcursor$2;
+    try {
+      this.$$und$undrestoreState__J__V(this.rec$9__p3__J__J(this.$$und$undsaveState__J()));
+      return true
+    } catch (e) {
+      if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e)) {
+        var e$2 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e);
+        e$2.bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$($m_Lorg_parboiled2_RuleTrace$ZeroOrMore$(), start$2)
+      } else {
+        throw e
+      }
+    }
+  } catch (e$3) {
+    if ($is_Lorg_parboiled2_Parser$TracingBubbleException(e$3)) {
+      var e$4 = $as_Lorg_parboiled2_Parser$TracingBubbleException(e$3);
+      e$4.prepend__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__Lorg_parboiled2_Parser$TracingBubbleException($m_Lorg_parboiled2_RuleTrace$RuleCall$(), start).bubbleUp__Lorg_parboiled2_RuleTrace$NonTerminalKey__I__sr_Nothing$(new $c_Lorg_parboiled2_RuleTrace$Named().init___T("ws"), start)
+    } else {
+      throw e$3
+    }
+  }
 });
 $c_Ltemplates_TermParser.prototype.terms__Lorg_parboiled2_Rule = (function() {
   if (this.$$und$undinErrorAnalysis__Z()) {
@@ -21727,13 +21943,7 @@ $c_Ltemplates_TermParser.prototype.terms__Lorg_parboiled2_Rule = (function() {
 });
 $c_Ltemplates_TermParser.prototype.rec$4__p3__J__J = (function(mark) {
   _rec: while (true) {
-    var this$3 = $m_Lorg_parboiled2_CharPredicate$().Alpha$1;
-    var c = this.$$undcursorChar$2;
-    if (this$3.apply__C__Z(c)) {
-      var matched = this.$$und$undadvance__Z()
-    } else {
-      var matched = false
-    };
+    var matched = this.$$und$undmatchNoneOf__T__I__Z("[]", 0);
     if (matched) {
       mark = this.$$und$undsaveState__J();
       continue _rec
@@ -21744,13 +21954,13 @@ $c_Ltemplates_TermParser.prototype.rec$4__p3__J__J = (function(mark) {
 });
 $c_Ltemplates_TermParser.prototype.$static__Lorg_parboiled2_Rule = (function() {
   if (this.$$und$undinErrorAnalysis__Z()) {
-    var matched$2 = this.wrapped$6__p3__Z()
+    var matched$2 = this.wrapped$5__p3__Z()
   } else {
     var start = this.org$parboiled2$Parser$$$undcursor$2;
     var t = this.$$und$undsaveState__J();
     var lo = t.lo$2;
     var hi = t.hi$2;
-    var t$1 = this.rec$6__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
+    var t$1 = this.rec$4__p3__J__J(new $c_sjsr_RuntimeLong().init___I__I(lo, hi));
     var lo$1 = t$1.lo$2;
     var hi$1 = t$1.hi$2;
     var matched = ((!((lo$1 === lo) && (hi$1 === hi))) && (this.$$und$undrestoreState__J__V(new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1)), true));
@@ -21763,6 +21973,10 @@ $c_Ltemplates_TermParser.prototype.$static__Lorg_parboiled2_Rule = (function() {
     }
   };
   return $as_Lorg_parboiled2_Rule((matched$2 ? $m_Lorg_parboiled2_Rule$() : null))
+});
+$c_Ltemplates_TermParser.prototype.ws__Lorg_parboiled2_Rule = (function() {
+  var matched = (this.$$und$undinErrorAnalysis__Z() ? this.wrapped$8__p3__Z() : (this.$$und$undrestoreState__J__V(this.rec$10__p3__J__J(this.$$und$undsaveState__J())), true));
+  return (matched ? $m_Lorg_parboiled2_Rule$() : null)
 });
 var $d_Ltemplates_TermParser = new $TypeData().initClass({
   Ltemplates_TermParser: 0

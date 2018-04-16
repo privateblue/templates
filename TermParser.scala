@@ -44,23 +44,31 @@ class TermParser(val input: ParserInput) extends Parser {
     assignment | expr | static
   }
 
-  def assignment: Rule1[PAssignment] = rule {
-    "[" ~ ident ~ "=" ~ expression ~ "]" ~> PAssignment
-  }
+  // implicit def wspStr(s: String): Rule0 = rule {
+  //   str(s) ~ zeroOrMore(' ')
+  // }
 
-  def ident: Rule1[String] = rule {
-    capture(oneOrMore( CharPredicate.Alpha ))
+  def assignment: Rule1[PAssignment] = rule {
+    "[" ~ ws ~ capture(ident) ~ ws ~ "=" ~ ws ~ capture(expression) ~ ws ~ "]" ~> PAssignment
   }
 
   def expr: Rule1[PExpr] = rule {
-    "[" ~ expression ~ "]" ~> PExpr
+    "[" ~ ws ~ capture(expression) ~ ws ~ "]" ~> PExpr
   }
 
   def static: Rule1[PStatic] = rule {
     capture(oneOrMore(noneOf("[]"))) ~> PStatic
   }
 
-  def expression: Rule1[String] = rule {
-    capture(oneOrMore(noneOf("[]=")))
+  def ident: Rule0 = rule {
+    oneOrMore(CharPredicate.Alpha)
+  }
+
+  def expression: Rule0 = rule {
+    oneOrMore(noneOf("[]="))
+  }
+
+  def ws: Rule0 = rule {
+    zeroOrMore(" " | "\n" | "\t" | "\r")
   }
 }
