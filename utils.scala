@@ -6,11 +6,11 @@ import scala.scalajs.js.annotation._
 object UI {
   @JSExportTopLevel("render")
   def render(source: String): String = {
-    val result = for {
-      terms <- TermParser.parse(source)
-      rendered <- TermEvaluator.compile(terms, ExpressionEvaluator.EmptyContext)
-    } yield rendered
-    result match {
+    val rendered = for {
+      parsed <- TermParser.parse(source)
+      compiled <- TermEvaluator.compile(parsed, ExpressionEvaluator.EmptyContext)
+    } yield compiled
+    rendered match {
       case Right(r) => r
       case Left(err) => err.msg
     }

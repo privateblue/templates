@@ -2,17 +2,23 @@
 <html>
   <head>
     <meta charset="UTF-8">
+
     <title>language</title>
+
     <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
+
     <style type="text/css">
+
       body {
         font-family: 'Crete Round', serif;
       }
+
       div.template {
         width: 1304px;
         margin: 0px auto;
       }
-      div#source, div#compiled {
+
+      div.source, div.compiled {
         width: 610px;
         height: 700px;
         margin: 10px;
@@ -21,20 +27,25 @@
         outline: 0px solid transparent;
         float: left;
       }
+
     </style>
   </head>
   <body>
-    <div class="template">
-      <div id="source" contenteditable="true" oninput="run()"></div>
-      <div id="compiled"></div>
+    <div class="template" id="template1">
+      <div class="source" id="source1" contenteditable="true" oninput="renderTemplate(1)"></div>
+      <div class="compiled" id="compiled1"></div>
     </div>
+
     <script type="text/javascript" src="./target/scala-2.12/language-fastopt.js"></script>
+
     <script type="text/javascript">
-      function run() {
-        let src = document.getElementById("source").innerText;
-        let compiled = render(src);
-        document.getElementById("compiled").innerText = compiled;
+
+      function renderTemplate(i) {
+        let source = document.getElementById("source" + i).innerText;
+        let compiled = render(source);
+        document.getElementById("compiled" + i).innerText = compiled;
       }
+
     </script>
   </body>
 </html>
