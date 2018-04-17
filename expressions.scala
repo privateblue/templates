@@ -1,5 +1,9 @@
 package templates
 
+import scala.util.parsing.combinator.syntactical.StdTokenParsers
+import scala.util.parsing.combinator.lexical.StdLexical
+import scala.util.parsing.combinator.PackratParsers
+
 sealed trait Value
 case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
@@ -103,36 +107,69 @@ object ExpressionEvaluator {
     }
 }
 
-sealed trait Term
-case class Assignment(name: String, expression: Expression) extends Term
-case class Expr(expression: Expression) extends Term
-case class Static(content: String) extends Term
+trait ExpressionParser extends StdTokenParsers with PackratParsers {
+  type Tokens = StdLexical
 
-object TermEvaluator {
-  type Context = ExpressionEvaluator.Context
+  val lexical = new StdLexical
+  lexical.delimiters ++= Seq("(", ")", "+", "*")
+  lexical.reserved += ("if", "then", "else", "true", "false", "and", "not")
 
-  def eval(term: Term, ctx: Context): Result[(String, Context)] =
-    term match {
-      case Assignment(name, expr) =>
-        val updated = ExpressionEvaluator.put(name, expr, ctx)
-        Right(("", updated))
+  lazy val expression: PackratParser[Expression] =
+    conditional | not | add | mult | and | `val` | variable | parens
 
-      case Expr(expr) =>
-        ExpressionEvaluator.eval(expr, ctx).flatMap {
-          case (Bool(v), ctx1) => Right((v.toString, ctx1))
-          case (Number(v), ctx1) => Right((v.toString, ctx1))
-          case (Text(v), ctx1) => Right((v, ctx1))
-        }
-
-      case Static(content) =>
-        Right((content, ctx))
+  lazy val conditional: PackratParser[If] =
+    "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
+      case "if" ~ condition ~ "then" ~ yes ~ "else" ~ no => If(condition, yes, no)
     }
 
-  def compile(terms: List[Term], context: Context): Result[String] = {
-    val start: Result[(String, Context)] = Right(("", context))
-    val rendering = terms.foldLeft(start) {
-      case (acc, term) => acc.flatMap(r => eval(term, r._2).map(e => (r._1 + e._1, e._2)))
+  lazy val not: PackratParser[Not] =
+    "not" ~ expression ^^ {
+      case "not" ~ expr => Not(expr)
     }
-    rendering.map(_._1)
-  }
+
+  lazy val add: PackratParser[Add] =
+    expression ~ "+" ~ expression ^^ {
+      case left ~ "+" ~ right => Add(left, right)
+    }
+
+  lazy val mult: PackratParser[Mult] =
+    expression ~ "*" ~ expression ^^ {
+      case left ~ "*" ~ right => Mult(left, right)
+    }
+
+  lazy val and: PackratParser[And] =
+    expression ~ "and" ~ expression ^^ {
+      case left ~ "and" ~ right => And(left, right)
+    }
+
+  lazy val `val`: PackratParser[Val] =
+    value ^^ {
+      case v => Val(v)
+    }
+
+  lazy val variable: PackratParser[Variable] =
+    ident ^^ {
+      name => Variable(name)
+    }
+
+  lazy val parens: PackratParser[Expression] =
+    "(" ~> expression <~ ")"
+
+  lazy val value: PackratParser[Value] =
+    bool | number | text
+
+  lazy val text: PackratParser[Text] =
+    stringLit ^^ { s => Text(s) }
+
+  lazy val number: PackratParser[Number] =
+    numericLit ^^ { l => Number(l.toInt) }
+
+  lazy val bool: PackratParser[Bool] =
+    boolT | boolF
+
+  lazy val boolT: PackratParser[Bool] =
+    "true" ^^ { _ => Bool(true) }
+
+  lazy val boolF: PackratParser[Bool] =
+    "false" ^^ { _ => Bool(false) }
 }

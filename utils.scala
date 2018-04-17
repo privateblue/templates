@@ -7,8 +7,8 @@ object UI {
   @JSExportTopLevel("render")
   def render(source: String): String = {
     val rendered = for {
-      parsed <- TermParser.parse(source)
-      compiled <- TermEvaluator.compile(parsed, ExpressionEvaluator.EmptyContext)
+      parsed <- TemplateParser.parse(source)
+      compiled <- TemplateCompiler.compile(parsed)
     } yield compiled
     rendered match {
       case Right(r) => r
