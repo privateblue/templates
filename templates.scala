@@ -2,10 +2,6 @@ package templates
 
 import org.parboiled2._
 
-import cats.instances.list._
-import cats.instances.either._
-import cats.syntax.traverse._
-
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
 import scala.util.parsing.combinator.lexical.StdLexical
 import scala.util.parsing.combinator.PackratParsers
