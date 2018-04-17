@@ -70,9 +70,7 @@ object StatementParser extends ExpressionParser {
     }
 
   lazy val `return`: PackratParser[Return] =
-    expression ^^ {
-      case expr => Return(expr)
-    }
+    expression ^^ Return.apply
 }
 
 object TemplateParser {

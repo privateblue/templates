@@ -11758,19 +11758,14 @@ function $f_Ltemplates_ExpressionParser__conditional__s_util_parsing_combinator_
             var no = $as_Ltemplates_Expression(x0$2.$$und2$1);
             if ((p2 !== null)) {
               var p3 = $as_s_util_parsing_combinator_Parsers$$tilde(p2.$$und1$1);
-              var p4 = $as_T(p2.$$und2$1);
               if ((p3 !== null)) {
                 var p5 = $as_s_util_parsing_combinator_Parsers$$tilde(p3.$$und1$1);
                 var yes = $as_Ltemplates_Expression(p3.$$und2$1);
                 if ((p5 !== null)) {
                   var p6 = $as_s_util_parsing_combinator_Parsers$$tilde(p5.$$und1$1);
-                  var p7 = $as_T(p5.$$und2$1);
                   if ((p6 !== null)) {
-                    var p8 = $as_T(p6.$$und1$1);
                     var condition = $as_Ltemplates_Expression(p6.$$und2$1);
-                    if (((p8 === "if") && ((p7 === "then") && (p4 === "else")))) {
-                      return new $c_Ltemplates_If().init___Ltemplates_Expression__Ltemplates_Expression__Ltemplates_Expression(condition, yes, no)
-                    }
+                    return new $c_Ltemplates_If().init___Ltemplates_Expression__Ltemplates_Expression__Ltemplates_Expression(condition, yes, no)
                   }
                 }
               }
@@ -11802,10 +11797,7 @@ function $f_Ltemplates_ExpressionParser__mult__s_util_parsing_combinator_Packrat
             var right = $as_Ltemplates_Expression(x0$5.$$und2$1);
             if ((p2 !== null)) {
               var left = $as_Ltemplates_Expression(p2.$$und1$1);
-              var p3 = $as_T(p2.$$und2$1);
-              if ((p3 === "*")) {
-                return new $c_Ltemplates_Mult().init___Ltemplates_Expression__Ltemplates_Expression(left, right)
-              }
+              return new $c_Ltemplates_Mult().init___Ltemplates_Expression__Ltemplates_Expression(left, right)
             }
           };
           throw new $c_s_MatchError().init___O(x0$5)
@@ -11819,9 +11811,9 @@ function $f_Ltemplates_ExpressionParser__val__s_util_parsing_combinator_PackratP
   var p = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this) {
     return (function() {
       return $this.value__s_util_parsing_combinator_PackratParsers$PackratParser().$$up$up__F1__s_util_parsing_combinator_Parsers$Parser(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1) {
-        return (function(x0$7$2) {
-          var x0$7 = $as_Ltemplates_Value(x0$7$2);
-          return new $c_Ltemplates_Val().init___Ltemplates_Value(x0$7)
+        return (function(underlying$2) {
+          var underlying = $as_Ltemplates_Value(underlying$2);
+          return new $c_Ltemplates_Val().init___Ltemplates_Value(underlying)
         })
       })($this)))
     })
@@ -11847,10 +11839,7 @@ function $f_Ltemplates_ExpressionParser__add__s_util_parsing_combinator_PackratP
             var right = $as_Ltemplates_Expression(x0$4.$$und2$1);
             if ((p2 !== null)) {
               var left = $as_Ltemplates_Expression(p2.$$und1$1);
-              var p3 = $as_T(p2.$$und2$1);
-              if ((p3 === "+")) {
-                return new $c_Ltemplates_Add().init___Ltemplates_Expression__Ltemplates_Expression(left, right)
-              }
+              return new $c_Ltemplates_Add().init___Ltemplates_Expression__Ltemplates_Expression(left, right)
             }
           };
           throw new $c_s_MatchError().init___O(x0$4)
@@ -11892,10 +11881,7 @@ function $f_Ltemplates_ExpressionParser__and__s_util_parsing_combinator_PackratP
             var right = $as_Ltemplates_Expression(x0$6.$$und2$1);
             if ((p2 !== null)) {
               var left = $as_Ltemplates_Expression(p2.$$und1$1);
-              var p3 = $as_T(p2.$$und2$1);
-              if ((p3 === "and")) {
-                return new $c_Ltemplates_And().init___Ltemplates_Expression__Ltemplates_Expression(left, right)
-              }
+              return new $c_Ltemplates_And().init___Ltemplates_Expression__Ltemplates_Expression(left, right)
             }
           };
           throw new $c_s_MatchError().init___O(x0$6)
@@ -12013,9 +11999,9 @@ function $f_Ltemplates_ExpressionParser__text__s_util_parsing_combinator_Packrat
   var p = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this) {
     return (function() {
       return $f_s_util_parsing_combinator_syntactical_StdTokenParsers__stringLit__s_util_parsing_combinator_Parsers$Parser($this).$$up$up__F1__s_util_parsing_combinator_Parsers$Parser(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1) {
-        return (function(s$2) {
-          var s = $as_T(s$2);
-          return new $c_Ltemplates_Text().init___T(s)
+        return (function(underlying$2) {
+          var underlying = $as_T(underlying$2);
+          return new $c_Ltemplates_Text().init___T(underlying)
         })
       })($this)))
     })
@@ -12069,13 +12055,11 @@ function $f_Ltemplates_ExpressionParser__not__s_util_parsing_combinator_PackratP
         return (function(x0$3$2) {
           var x0$3 = $as_s_util_parsing_combinator_Parsers$$tilde(x0$3$2);
           if ((x0$3 !== null)) {
-            var p2 = $as_T(x0$3.$$und1$1);
             var expr = $as_Ltemplates_Expression(x0$3.$$und2$1);
-            if ((p2 === "not")) {
-              return new $c_Ltemplates_Not().init___Ltemplates_Expression(expr)
-            }
-          };
-          throw new $c_s_MatchError().init___O(x0$3)
+            return new $c_Ltemplates_Not().init___Ltemplates_Expression(expr)
+          } else {
+            throw new $c_s_MatchError().init___O(x0$3)
+          }
         })
       })($this)))
     })
@@ -18775,9 +18759,9 @@ $c_Ltemplates_StatementParser$.prototype.return$lzycompute__p1__s_util_parsing_c
     var p = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this) {
       return (function() {
         return $m_Ltemplates_StatementParser$().expression__s_util_parsing_combinator_PackratParsers$PackratParser().$$up$up__F1__s_util_parsing_combinator_Parsers$Parser(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1) {
-          return (function(x0$4$2) {
-            var x0$4 = $as_Ltemplates_Expression(x0$4$2);
-            return new $c_Ltemplates_Return().init___Ltemplates_Expression(x0$4)
+          return (function(expression$2) {
+            var expression = $as_Ltemplates_Expression(expression$2);
+            return new $c_Ltemplates_Return().init___Ltemplates_Expression(expression)
           })
         })($this)))
       })
