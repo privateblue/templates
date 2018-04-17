@@ -8,7 +8,10 @@ import scala.util.parsing.combinator.PackratParsers
 
 import scala.util.{Success, Failure}
 
+case class TemplateRef(name: String)
+
 sealed trait Statement
+case class Include(ref: TemplateRef) extends Statement
 case class Assignment(name: String, expression: Expression) extends Statement
 case class Return(expression: Expression) extends Statement
 
@@ -18,29 +21,44 @@ case class Static(content: String) extends Block
 
 case class Template(blocks: List[Block])
 
-object StatementEvaluator {
-  type Context = ExpressionEvaluator.Context
+case class Context(
+  variables: ExpressionEvaluator.Context,
+  templates: Map[TemplateRef, () => Template],
+  includePath: List[TemplateRef]
+) {
+  def putVar(name: String, expr: Expression): Context =
+    Context(ExpressionEvaluator.put(name, expr, variables), templates, includePath)
 
+  def replaceVars(ctx: ExpressionEvaluator.Context): Context =
+    Context(ctx, templates, includePath)
+}
+
+object Context {
+  def init(root: TemplateRef, templates: Map[TemplateRef, () => Template]): Context =
+    Context(ExpressionEvaluator.EmptyContext, templates, root :: Nil)
+}
+
+object StatementEvaluator {
   def eval(stmt: Statement, ctx: Context): Result[(String, Context)] =
     stmt match {
+      case Include(ref) =>
+        ???
+
       case Assignment(name, expr) =>
-        val updated = ExpressionEvaluator.put(name, expr, ctx)
+        val updated = ctx.putVar(name, expr)
         Right(("", updated))
 
       case Return(expr) =>
-        ExpressionEvaluator.eval(expr, ctx).flatMap {
-          case (Bool(v), ctx1) => Right((v.toString, ctx1))
-          case (Number(v), ctx1) => Right((v.toString, ctx1))
-          case (Text(v), ctx1) => Right((v, ctx1))
+        ExpressionEvaluator.eval(expr, ctx.variables).flatMap {
+          case (Bool(v), ctx1) => Right((v.toString, ctx.replaceVars(ctx1)))
+          case (Number(v), ctx1) => Right((v.toString, ctx.replaceVars(ctx1)))
+          case (Text(v), ctx1) => Right((v, ctx.replaceVars(ctx1)))
         }
     }
 }
 
 object TemplateCompiler {
-  type Context = ExpressionEvaluator.Context
-  val EmptyContext = ExpressionEvaluator.EmptyContext
-
-  def compile(template: Template, context: Context = EmptyContext): Result[String] = {
+  def compile(template: Template, context: Context): Result[String] = {
     val start: Result[(String, Context)] = Right(("", context))
     val rendering = template.blocks.foldLeft(start) {
       case (acc, Term(stmt)) => acc.flatMap(r => StatementEvaluator.eval(stmt, r._2).map(e => (r._1 + e._1, e._2)))
@@ -52,6 +70,7 @@ object TemplateCompiler {
 
 object StatementParser extends ExpressionParser {
   lexical.delimiters ++= Seq("=")
+  lexical.reserved += ("include")
 
   def parse(str: String): Result[Statement] = {
     val tokens = new lexical.Scanner(str)
@@ -62,7 +81,12 @@ object StatementParser extends ExpressionParser {
   }
 
   lazy val statement: PackratParser[Statement] =
-    assignment | `return`
+    include | assignment | `return`
+
+  lazy val include: PackratParser[Include] =
+    "include" ~ ref ^^ {
+      case _ ~ ref => Include(ref)
+    }
 
   lazy val assignment: PackratParser[Assignment] =
     ident ~ "=" ~ expression ^^ {
@@ -70,9 +94,10 @@ object StatementParser extends ExpressionParser {
     }
 
   lazy val `return`: PackratParser[Return] =
-    expression ^^ {
-      case expr => Return(expr)
-    }
+    expression ^^ Return.apply
+
+  lazy val ref: PackratParser[TemplateRef] =
+    numericLit ^^ TemplateRef.apply
 }
 
 object TemplateParser {
