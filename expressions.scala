@@ -119,38 +119,34 @@ trait ExpressionParser extends StdTokenParsers with PackratParsers {
 
   lazy val conditional: PackratParser[If] =
     "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
-      case "if" ~ condition ~ "then" ~ yes ~ "else" ~ no => If(condition, yes, no)
+      case _ ~ condition ~ _ ~ yes ~ _ ~ no => If(condition, yes, no)
     }
 
   lazy val not: PackratParser[Not] =
     "not" ~ expression ^^ {
-      case "not" ~ expr => Not(expr)
+      case _ ~ expr => Not(expr)
     }
 
   lazy val add: PackratParser[Add] =
     expression ~ "+" ~ expression ^^ {
-      case left ~ "+" ~ right => Add(left, right)
+      case left ~ _ ~ right => Add(left, right)
     }
 
   lazy val mult: PackratParser[Mult] =
     expression ~ "*" ~ expression ^^ {
-      case left ~ "*" ~ right => Mult(left, right)
+      case left ~ _ ~ right => Mult(left, right)
     }
 
   lazy val and: PackratParser[And] =
     expression ~ "and" ~ expression ^^ {
-      case left ~ "and" ~ right => And(left, right)
+      case left ~ _ ~ right => And(left, right)
     }
 
   lazy val `val`: PackratParser[Val] =
-    value ^^ {
-      case v => Val(v)
-    }
+    value ^^ Val.apply
 
   lazy val variable: PackratParser[Variable] =
-    ident ^^ {
-      name => Variable(name)
-    }
+    ident ^^ Variable.apply
 
   lazy val parens: PackratParser[Expression] =
     "(" ~> expression <~ ")"
@@ -159,7 +155,7 @@ trait ExpressionParser extends StdTokenParsers with PackratParsers {
     bool | number | text
 
   lazy val text: PackratParser[Text] =
-    stringLit ^^ { s => Text(s) }
+    stringLit ^^ Text.apply
 
   lazy val number: PackratParser[Number] =
     numericLit ^^ { l => Number(l.toInt) }
