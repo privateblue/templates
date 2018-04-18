@@ -13,14 +13,24 @@
         font-family: 'Crete Round', serif;
       }
 
-      div.template {
+      .templates {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .template {
         width: 1304px;
         margin: 0px auto;
       }
 
-      div.source, div.compiled {
+      .label {
+        width: 1304px;
+      }
+
+      .source, .compiled {
         width: 610px;
-        height: 700px;
+        height: 300px;
         margin: 10px;
         padding: 10px;
         border: 1px solid #888;
@@ -28,22 +38,79 @@
         float: left;
       }
 
+      .empty {
+        clear: both;
+      }
+
+      .add {
+        margin: 0px auto;
+        width: 60px;
+        font-size: 20px;
+        padding: 10px;
+        color: #fff;
+        background-color: #f00;
+        border-radius: 0%;
+        outline: 0px solid transparent;
+      }
+
     </style>
   </head>
   <body>
-    <div class="template" id="template1">
-      <div class="source" id="source1" contenteditable="true" oninput="renderTemplate(1)"></div>
-      <div class="compiled" id="compiled1"></div>
-    </div>
+    <ol class="templates" id="templates">
+      <li class="template" id="template0">
+        <div class="label">template0</div>
+        <div class="source" id="source0" contenteditable="true" oninput="renderTemplates()"></div>
+        <div class="compiled" id="compiled0"></div>
+        <div class="empty"></div>
+      </li>
+    </ol>
+
+    <button type="button" class="add" onclick="addTemplate()">+</button>
 
     <script type="text/javascript" src="./target/scala-2.12/templates-fastopt.js"></script>
 
     <script type="text/javascript">
 
-      function renderTemplate(i) {
-        let source = document.getElementById("source" + i).innerText;
-        let compiled = render(source);
-        document.getElementById("compiled" + i).innerText = compiled;
+      let count = 1;
+
+      function addTemplate() {
+        let name = "template" + count;
+        let sourceId = "source" + count;
+        let compiledId = "compiled" + count;
+        let labelText = document.createTextNode(name);
+        let label = document.createElement("DIV");
+        label.setAttribute("class", "label");
+        label.appendChild(labelText);
+        let source = document.createElement("DIV");
+        source.setAttribute("class", "source");
+        source.setAttribute("id", sourceId);
+        source.setAttribute("contenteditable", "true");
+        source.addEventListener("input", renderTemplates);
+        let compiled = document.createElement("DIV");
+        compiled.setAttribute("class", "compiled");
+        compiled.setAttribute("id", compiledId);
+        let empty = document.createElement("DIV");
+        empty.setAttribute("class", "empty");
+        let template = document.createElement("LI");
+        template.setAttribute("class", "template");
+        template.setAttribute("id", name);
+        template.appendChild(label);
+        template.appendChild(source);
+        template.appendChild(compiled);
+        template.appendChild(empty);
+        document.getElementById("templates").appendChild(template);
+        count++;
+      }
+
+      function renderTemplates() {
+        let sources = [];
+        for (let i = 0; i < count; i++) {
+          sources.push(document.getElementById("source" + i).innerText);
+        }
+        let compiled = render(sources);
+        for (let i = 0; i < count; i++) {
+          document.getElementById("compiled" + i).innerText = compiled[i];
+        }
       }
 
     </script>

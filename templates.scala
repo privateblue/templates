@@ -8,10 +8,8 @@ import scala.util.parsing.combinator.PackratParsers
 
 import scala.util.{Success, Failure}
 
-case class TemplateRef(name: String)
-
 sealed trait Statement
-case class Include(ref: TemplateRef) extends Statement
+case class Include(name: String) extends Statement
 case class Assignment(name: String, expression: Expression) extends Statement
 case class Return(expression: Expression) extends Statement
 
@@ -19,30 +17,44 @@ sealed trait Block
 case class Term(statement: Statement) extends Block
 case class Static(content: String) extends Block
 
-case class Template(blocks: List[Block])
+sealed trait Template
+case class Source(src: String) extends Template
+case class AST(blocks: List[Block]) extends Template
 
 case class Context(
   variables: ExpressionEvaluator.Context,
-  templates: Map[TemplateRef, () => Template],
-  includePath: List[TemplateRef]
+  templates: Map[String, Result[Template]],
+  includePath: List[String]
 ) {
   def putVar(name: String, expr: Expression): Context =
     Context(ExpressionEvaluator.put(name, expr, variables), templates, includePath)
 
   def replaceVars(ctx: ExpressionEvaluator.Context): Context =
     Context(ctx, templates, includePath)
-}
 
-object Context {
-  def init(root: TemplateRef, templates: Map[TemplateRef, () => Template]): Context =
-    Context(ExpressionEvaluator.EmptyContext, templates, root :: Nil)
+  def findTemplate(name: String): Result[Template] =
+    templates.get(name)
+      .toRight(Undefined(s"Template $name not found"))
+      .flatMap(identity)
+
+  def putTemplate(name: String, template: AST): Context =
+    Context(variables, templates + (name -> Right(template)), includePath)
+
+  def replaceTemplates(ts: Map[String, Result[Template]]): Context =
+    Context(variables, ts, includePath)
+
+  def pushInclude(name: String): Result[Context] =
+    if (includePath.contains(name)) {
+      val path = includePath.reverse.mkString("", " -> ", s" -> $name")
+      Left(CyclicReference(s"Template $name includes itself: $path"))
+    } else Right(Context(variables, templates, name :: includePath))
 }
 
 object StatementEvaluator {
-  def eval(stmt: Statement, ctx: Context): Result[(String, Context)] =
+  def eval(stmt: Statement, ctx: Context): Either[(LanguageError, Context), (String, Context)] =
     stmt match {
-      case Include(ref) =>
-        ???
+      case Include(name) =>
+        TemplateCompiler.compile(name, ctx)
 
       case Assignment(name, expr) =>
         val updated = ctx.putVar(name, expr)
@@ -53,18 +65,40 @@ object StatementEvaluator {
           case (Bool(v), ctx1) => Right((v.toString, ctx.replaceVars(ctx1)))
           case (Number(v), ctx1) => Right((v.toString, ctx.replaceVars(ctx1)))
           case (Text(v), ctx1) => Right((v, ctx.replaceVars(ctx1)))
-        }
+        }.errorWith(ctx)
     }
 }
 
 object TemplateCompiler {
-  def compile(template: Template, context: Context): Result[String] = {
+  def compile(name: String, context: Context): Either[(LanguageError, Context), (String, Context)] =
+    for {
+      found <- findParseMemoize(name, context).errorWith(context)
+      (parsed, ctx1) = found
+      ctx2 = context.replaceTemplates(ctx1.templates)
+      ctx3 <- ctx2.pushInclude(name).errorWith(ctx2)
+      result <- compileAst(parsed, ctx3).errorWith(ctx2)
+      (compiled, ctx4) = result
+    } yield (compiled, context.replaceTemplates(ctx4.templates))
+
+  def findParseMemoize(name: String, context: Context): Result[(AST, Context)] =
+    for {
+      found <- context.findTemplate(name)
+      parsed <- found match {
+        case Source(src) => TemplateParser.parse(src)
+        case ast @ AST(_) => Right(ast)
+      }
+    } yield (parsed, context.putTemplate(name, parsed))
+
+  def compileAst(template: AST, context: Context): Result[(String, Context)] = {
     val start: Result[(String, Context)] = Right(("", context))
-    val rendering = template.blocks.foldLeft(start) {
-      case (acc, Term(stmt)) => acc.flatMap(r => StatementEvaluator.eval(stmt, r._2).map(e => (r._1 + e._1, e._2)))
-      case (acc, Static(content)) => acc.map(r => (r._1 + content, r._2))
+    template.blocks.foldLeft(start) {
+      case (results, Term(stmt)) =>
+        results.flatMap { case (previous, ctx1) =>
+          StatementEvaluator.eval(stmt, ctx1).ignoreWith.map(r => (previous + r._1, r._2))
+        }
+      case (results, Static(content)) =>
+        results.map { case (previous, ctx1) => (previous + content, ctx1) }
     }
-    rendering.map(_._1)
   }
 }
 
@@ -84,8 +118,8 @@ object StatementParser extends ExpressionParser {
     include | assignment | `return`
 
   lazy val include: PackratParser[Include] =
-    "include" ~ ref ^^ {
-      case _ ~ ref => Include(ref)
+    "include" ~ ident ^^ {
+      case _ ~ name => Include(name)
     }
 
   lazy val assignment: PackratParser[Assignment] =
@@ -95,14 +129,11 @@ object StatementParser extends ExpressionParser {
 
   lazy val `return`: PackratParser[Return] =
     expression ^^ Return.apply
-
-  lazy val ref: PackratParser[TemplateRef] =
-    numericLit ^^ TemplateRef.apply
 }
 
 object TemplateParser {
-  def parse(str: String): Result[Template] = {
-    val parser = new TemplateParser(str)
+  def parse(src: String): Result[AST] = {
+    val parser = new TemplateParser(src)
     parser.template.run() match {
       case Success(template) => Right(template)
       case Failure(err) => Left(SyntaxError(err.getMessage))
@@ -111,9 +142,9 @@ object TemplateParser {
 }
 
 class TemplateParser(val input: ParserInput) extends Parser {
-  def template: Rule1[Template] = rule {
+  def template: Rule1[AST] = rule {
     zeroOrMore(block) ~ EOI ~> { (blocks: Seq[Block]) =>
-      Template(blocks.toList)
+      AST(blocks.toList)
     }
   }
 
