@@ -17,6 +17,7 @@ case class Add(left: Expression, right: Expression) extends Expression
 case class Mult(left: Expression, right: Expression) extends Expression
 case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
+case class Eval(src: Expression) extends Expression
 
 object ExpressionEvaluator {
   type Context = List[(String, Expression)]
@@ -104,6 +105,18 @@ object ExpressionEvaluator {
           case (Bool(b), ctx1) => Right((Bool(!b), ctx1))
           case _ => Left(TypeError("Bool expected in Not"))
         }
+
+      case Eval(source) =>
+        for {
+          s <- eval(source, ctx)
+          (src, ctx1) = s
+          parsed <- src match {
+            case Text(t) => TemplateParser.parse(t)
+            case _ => Left(TypeError("Text expected in Eval"))
+          }
+          result <- TemplateCompiler.compile(parsed, ctx1)
+          (compiled, _) = result
+        } yield (Text(compiled), ctx1)
     }
 }
 
@@ -112,10 +125,10 @@ trait ExpressionParser extends StdTokenParsers with PackratParsers {
 
   val lexical = new StdLexical
   lexical.delimiters ++= Seq("(", ")", "+", "*")
-  lexical.reserved += ("if", "then", "else", "true", "false", "and", "not")
+  lexical.reserved += ("if", "then", "else", "true", "false", "and", "not", "eval")
 
   lazy val expression: PackratParser[Expression] =
-    conditional | not | add | mult | and | `val` | variable | parens
+    eval | conditional | not | add | mult | and | `val` | variable | parens
 
   lazy val conditional: PackratParser[If] =
     "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
@@ -125,6 +138,11 @@ trait ExpressionParser extends StdTokenParsers with PackratParsers {
   lazy val not: PackratParser[Not] =
     "not" ~ expression ^^ {
       case _ ~ expr => Not(expr)
+    }
+
+  lazy val eval: PackratParser[Eval] =
+    "eval" ~ expression ^^ {
+      case _ ~ expr => Eval(expr)
     }
 
   lazy val add: PackratParser[Add] =

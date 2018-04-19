@@ -40,13 +40,13 @@ object TemplateCompiler {
   type Context = ExpressionEvaluator.Context
   val EmptyContext = ExpressionEvaluator.EmptyContext
 
-  def compile(template: Template, context: Context = EmptyContext): Result[String] = {
+  def compile(template: Template, context: Context = EmptyContext): Result[(String, Context)] = {
     val start: Result[(String, Context)] = Right(("", context))
     val rendering = template.blocks.foldLeft(start) {
       case (acc, Term(stmt)) => acc.flatMap(r => StatementEvaluator.eval(stmt, r._2).map(e => (r._1 + e._1, e._2)))
       case (acc, Static(content)) => acc.map(r => (r._1 + content, r._2))
     }
-    rendering.map(_._1)
+    rendering
   }
 }
 

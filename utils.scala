@@ -10,9 +10,6 @@ object UI {
       parsed <- TemplateParser.parse(source)
       compiled <- TemplateCompiler.compile(parsed)
     } yield compiled
-    rendered match {
-      case Right(r) => r
-      case Left(err) => err.msg
-    }
+    rendered.fold(_.msg, _._1)
   }
 }
