@@ -1,5 +1,7 @@
 package templates
 
+import cats.implicits._
+
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
 import scala.util.parsing.combinator.lexical.StdLexical
 import scala.util.parsing.combinator.PackratParsers
@@ -19,90 +21,64 @@ case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
 
 object ExpressionEvaluator {
-  type Context = List[(String, Expression)]
-
-  val EmptyContext: Context = List.empty
-
-  def put(name: String, expr: Expression, ctx: Context): Context =
-    (name, expr) :: ctx
-
-  def find(
-    name: String,
-    ctx: Context,
-    prefix: Context = EmptyContext
-  ): Result[(Context, Context)] =
-    ctx match {
-      case Nil => Left(Undefined(s"Variable $name not found"))
-      case (key, expr) :: rest if key == name => Right((prefix, ctx))
-      case head :: rest => find(name, rest, prefix :+ head)
-    }
-
-  def eval(expr: Expression, ctx: Context): Result[(Value, Context)] =
+  def eval(expr: Expression): Contexted[Value] =
     expr match {
       case Variable(name) =>
         for {
-          split <- find(name, ctx)
-          (rest, (_, expr) :: ctx1) = split
-          evaluated <- eval(expr, ctx1)
-          (value, ctx2) = evaluated
-          binding = (name, Val(value))
-          ctx3 = binding :: ctx2
-        } yield (value, rest ++ ctx3)
+          found <- find(name)
+          (expr, rest) = found
+          value <- eval(expr)
+          _ <- push(name, Val(value))
+          _ <- merge(rest)
+        } yield value
 
       case Val(value) =>
-        Right((value, ctx))
+        result(value)
 
       case If(condition, yes, no) =>
         for {
-          condEval <- eval(condition, ctx)
-          (cond, ctx1) = condEval
-          c <- cond match {
-            case Bool(b) => Right(b)
-            case _ => Left(TypeError("Bool expected in If"))
+          c <- eval(condition)
+          cond <- c match {
+            case Bool(b) => result(b)
+            case _ => error(TypeError("Bool expected in If"))
           }
-          result <- if (c) eval(yes, ctx1) else eval(no, ctx1)
+          result <- if (cond) eval(yes) else eval(no)
         } yield result
 
       case Add(left, right) =>
         for {
-          leftEval <- eval(left, ctx)
-          (l, ctx1) = leftEval
-          rightEval <- eval(right, ctx1)
-          (r, ctx2) = rightEval
-          result <- (l, r) match {
-            case (Number(n), Number(m)) => Right((Number(n + m), ctx2))
-            case _ => Left(TypeError("Numbers expected in Add"))
+          l <- eval(left)
+          r <- eval(right)
+          add <- (l, r) match {
+            case (Number(n), Number(m)) => result(Number(n + m))
+            case _ => error(TypeError("Numbers expected in Add"))
           }
-        } yield result
+        } yield add
 
       case Mult(left, right) =>
         for {
-          leftEval <- eval(left, ctx)
-          (l, ctx1) = leftEval
-          rightEval <- eval(right, ctx1)
-          (r, ctx2) = rightEval
-          result <- (l, r) match {
-            case (Number(n), Number(m)) => Right((Number(n * m), ctx2))
-            case _ => Left(TypeError("Numbers expected in Mult"))
+          l <- eval(left)
+          r <- eval(right)
+          mult <- (l, r) match {
+            case (Number(n), Number(m)) => result(Number(n * m))
+            case _ => error(TypeError("Numbers expected in Mult"))
           }
-        } yield result
+        } yield mult
 
       case And(left, right) =>
         for {
-          leftEval <- eval(left, ctx)
-          (l, ctx1) = leftEval
-          rightEval <- eval(right, ctx1)
-          (r, ctx2) = rightEval
-          result <- (l, r) match {
-            case (Bool(n), Bool(m)) => Right((Bool(n && m), ctx2))
-            case _ => Left(TypeError("Bools expected in And"))
+          l <- eval(left)
+          r <- eval(right)
+          and <- (l, r) match {
+            case (Bool(n), Bool(m)) => result(Bool(n && m))
+            case _ => error(TypeError("Bools expected in And"))
           }
-        } yield result
+        } yield and
 
       case Not(expr) =>
-        eval(expr, ctx).flatMap {
-          case (Bool(b), ctx1) => Right((Bool(!b), ctx1))
-          case _ => Left(TypeError("Bool expected in Not"))
+        eval(expr).flatMap {
+          case Bool(b) => result(Bool(!b))
+          case _ => error(TypeError("Bool expected in Not"))
         }
     }
 }
