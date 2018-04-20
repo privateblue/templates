@@ -40,14 +40,14 @@ package object templates {
 
   def find(
     name: String,
-    newer: Context = EmptyContext
+    after: Context = EmptyContext
   ): Contexted[(Expression, Context)] =
     get.flatMap {
       case Nil =>
         error(Undefined(s"Variable $name not found"))
-      case (key, expr) :: older if key == name =>
-        set(older).flatMap(_ => result((expr, newer)))
-      case head :: older =>
-        set(older).flatMap(_ => find(name, newer :+ head))
+      case (key, expr) :: before if key == name =>
+        set(before).flatMap(_ => result((expr, after)))
+      case head :: before =>
+        set(before).flatMap(_ => find(name, after :+ head))
     }
 }
