@@ -1,5 +1,7 @@
 package templates
 
+import cats.implicits._
+
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
 
@@ -10,11 +12,12 @@ object UI {
     sources.map(render(context))
   }
 
-  def render(context: ExpressionEvaluator.Context)(source: String): String = {
+  def render(context: Context)(source: String): String = {
     val rendered = for {
-      parsed <- TemplateParser.parse(source)
-      compiled <- TemplateCompiler.compile(parsed, context)
+      _ <- set(context)
+      parsed <- lift(TemplateParser.parse(source))
+      compiled <- TemplateCompiler.compile(parsed)
     } yield compiled
-    rendered.fold(_.msg, _._1)
+    rendered.runEmptyA.fold(_.msg, identity)
   }
 }

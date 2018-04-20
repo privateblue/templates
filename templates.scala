@@ -1,12 +1,13 @@
 package templates
 
 import org.parboiled2._
+import org.parboiled2.Parser.DeliveryScheme.Either
+
+import cats.implicits._
 
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
 import scala.util.parsing.combinator.lexical.StdLexical
 import scala.util.parsing.combinator.PackratParsers
-
-import scala.util.{Success, Failure}
 
 sealed trait Statement
 case class Assignment(name: String, expression: Expression) extends Statement
@@ -19,35 +20,26 @@ case class Static(content: String) extends Block
 case class Template(blocks: List[Block])
 
 object StatementEvaluator {
-  type Context = ExpressionEvaluator.Context
-
-  def eval(stmt: Statement, ctx: Context): Result[(String, Context)] =
+  def eval(stmt: Statement): Contexted[String] =
     stmt match {
       case Assignment(name, expr) =>
-        val updated = ExpressionEvaluator.put(name, expr, ctx)
-        Right(("", updated))
+        push(name, expr).map(_ => "")
 
       case Return(expr) =>
-        ExpressionEvaluator.eval(expr, ctx).flatMap {
-          case (Bool(v), ctx1) => Right((v.toString, ctx1))
-          case (Number(v), ctx1) => Right((v.toString, ctx1))
-          case (Text(v), ctx1) => Right((v, ctx1))
+        ExpressionEvaluator.eval(expr).flatMap {
+          case Bool(v) => result(v.toString)
+          case Number(v) => result(v.toString)
+          case Text(v) => result(v)
         }
     }
 }
 
 object TemplateCompiler {
-  type Context = ExpressionEvaluator.Context
-  val EmptyContext = ExpressionEvaluator.EmptyContext
-
-  def compile(template: Template, context: Context = EmptyContext): Result[(String, Context)] = {
-    val start: Result[(String, Context)] = Right(("", context))
-    val rendering = template.blocks.foldLeft(start) {
-      case (acc, Term(stmt)) => acc.flatMap(r => StatementEvaluator.eval(stmt, r._2).map(e => (r._1 + e._1, e._2)))
-      case (acc, Static(content)) => acc.map(r => (r._1 + content, r._2))
+  def compile(template: Template): Contexted[String] =
+    template.blocks.foldMapM {
+      case Term(stmt) => StatementEvaluator.eval(stmt)
+      case Static(content) => result(content)
     }
-    rendering
-  }
 }
 
 object StatementParser extends ExpressionParser {
@@ -76,10 +68,8 @@ object StatementParser extends ExpressionParser {
 object TemplateParser {
   def parse(str: String): Result[Template] = {
     val parser = new TemplateParser(str)
-    parser.template.run() match {
-      case Success(template) => Right(template)
-      case Failure(err) => Left(SyntaxError(err.getMessage))
-    }
+    val run = parser.template.run()
+    run.leftMap(err => SyntaxError(err.getMessage))
   }
 }
 
@@ -96,10 +86,7 @@ class TemplateParser(val input: ParserInput) extends Parser {
 
   def term: Rule1[Term] = rule {
     "[" ~ capture(oneOrMore(noneOf("[]"))) ~ "]" ~> { (str: String) =>
-      StatementParser.parse(str) match {
-        case Right(stmt) => push(Term(stmt))
-        case Left(err) => MISMATCH
-      }
+      StatementParser.parse(str).fold(_ => MISMATCH, stmt => rule(push(Term(stmt))))
     }
   }
 
