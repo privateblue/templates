@@ -9,56 +9,18 @@ import scala.util.parsing.combinator.syntactical.StdTokenParsers
 import scala.util.parsing.combinator.lexical.StdLexical
 import scala.util.parsing.combinator.PackratParsers
 
-sealed trait Statement
-case class Assignment(name: String, expression: Expression) extends Statement
-case class Return(expression: Expression) extends Statement
-
 sealed trait Block
-case class Term(statement: Statement) extends Block
+case class Term(expr: Expression) extends Block
 case class Static(content: String) extends Block
 
 case class Template(blocks: List[Block])
 
-object StatementEvaluator {
-  def eval(stmt: Statement): Contexted[Value] =
-    stmt match {
-      case Assignment(name, expr) =>
-        push(name, expr).map(_ =>`Unit`)
-
-      case Return(expr) =>
-        ExpressionEvaluator.eval(expr)
-    }
-}
-
 object TemplateEvaluator {
   def eval(template: Template): Contexted[String] =
     template.blocks.foldMapM {
-      case Term(stmt) => StatementEvaluator.eval(stmt).map(ValuePrinter.print)
+      case Term(expr) => ExpressionEvaluator.eval(expr).map(ValuePrinter.print)
       case Static(content) => result(content)
     }
-}
-
-object StatementParser extends ExpressionParser {
-  lexical.delimiters ++= Seq("=")
-
-  def parse(str: String): Result[Statement] = {
-    val tokens = new lexical.Scanner(str)
-    phrase(statement)(tokens) match {
-      case Success(parsed, _) => Right(parsed)
-      case NoSuccess(err, _) => Left(SyntaxError(err))
-    }
-  }
-
-  lazy val statement: PackratParser[Statement] =
-    assignment | `return`
-
-  lazy val assignment: PackratParser[Assignment] =
-    ident ~ "=" ~ expression ^^ {
-      case name ~ "=" ~ expr => Assignment(name, expr)
-    }
-
-  lazy val `return`: PackratParser[Return] =
-    expression ^^ Return.apply
 }
 
 object TemplateParser {
@@ -82,7 +44,7 @@ class TemplateParser(val input: ParserInput) extends Parser {
 
   def term: Rule1[Term] = rule {
     "[" ~ capture(oneOrMore(noneOf("[]"))) ~ "]" ~> { (str: String) =>
-      StatementParser.parse(str).fold(_ => MISMATCH, stmt => rule(push(Term(stmt))))
+      ExpressionParser.parse(str).fold(_ => MISMATCH, stmt => rule(push(Term(stmt))))
     }
   }
 

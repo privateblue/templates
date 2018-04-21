@@ -24,6 +24,7 @@ object ValuePrinter {
 
 sealed trait Expression
 case class Variable(name: String) extends Expression
+case class Assignment(name: String, expression: Expression) extends Expression
 case class Val(underlying: Value) extends Expression
 case class If(condition: Expression, yes: Expression, no: Expression) extends Expression
 case class Add(left: Expression, right: Expression) extends Expression
@@ -42,6 +43,9 @@ object ExpressionEvaluator {
           _ <- push(name, Val(value))
           _ <- merge(rest)
         } yield value
+
+      case Assignment(name, expr) =>
+        push(name, expr).map(_ =>`Unit`)
 
       case Val(value) =>
         result(value)
@@ -94,15 +98,23 @@ object ExpressionEvaluator {
     }
 }
 
-trait ExpressionParser extends StdTokenParsers with PackratParsers {
+object ExpressionParser extends StdTokenParsers with PackratParsers {
   type Tokens = StdLexical
 
   val lexical = new StdLexical
-  lexical.delimiters ++= Seq("(", ")", "+", "*")
+  lexical.delimiters ++= Seq("(", ")", "=", "+", "*")
   lexical.reserved += ("if", "then", "else", "true", "false", "and", "not")
 
+  def parse(str: String): Result[Expression] = {
+    val tokens = new lexical.Scanner(str)
+    phrase(expression)(tokens) match {
+      case Success(parsed, _) => Right(parsed)
+      case NoSuccess(err, _) => Left(SyntaxError(err))
+    }
+  }
+
   lazy val expression: PackratParser[Expression] =
-    conditional | not | add | mult | and | `val` | variable | parens
+    conditional | not | add | mult | and | assignment | variable | `val` | parens
 
   lazy val conditional: PackratParser[If] =
     "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
@@ -129,11 +141,16 @@ trait ExpressionParser extends StdTokenParsers with PackratParsers {
       case left ~ _ ~ right => And(left, right)
     }
 
-  lazy val `val`: PackratParser[Val] =
-    value ^^ Val.apply
+  lazy val assignment: PackratParser[Assignment] =
+    ident ~ "=" ~ expression ^^ {
+      case name ~ "=" ~ expr => Assignment(name, expr)
+    }
 
   lazy val variable: PackratParser[Variable] =
     ident ^^ Variable.apply
+
+  lazy val `val`: PackratParser[Val] =
+    value ^^ Val.apply
 
   lazy val parens: PackratParser[Expression] =
     "(" ~> expression <~ ")"
