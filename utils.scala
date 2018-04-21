@@ -9,7 +9,7 @@ object UI {
   def render(source: String): String = {
     val rendered = for {
       parsed <- lift(TemplateParser.parse(source))
-      compiled <- TemplateCompiler.compile(parsed)
+      compiled <- TemplateEvaluator.eval(parsed)
     } yield compiled
     rendered.runEmptyA.fold(_.msg, identity)
   }
