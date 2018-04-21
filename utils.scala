@@ -16,7 +16,7 @@ object UI {
     val rendered = for {
       _ <- set(context)
       parsed <- lift(TemplateParser.parse(source))
-      compiled <- TemplateCompiler.compile(parsed)
+      compiled <- TemplateEvaluator.eval(parsed)
     } yield compiled
     rendered.runEmptyA.fold(_.msg, identity)
   }

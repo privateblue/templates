@@ -90,7 +90,7 @@ object ExpressionEvaluator {
             case Text(t) => lift(TemplateParser.parse(t))
             case _ => error(TypeError("Text expected in Eval"))
           }
-          compiled <- TemplateCompiler.compile(parsed)
+          compiled <- TemplateEvaluator.eval(parsed)
           _ <- set(ctx1)
         } yield Text(compiled)
     }
