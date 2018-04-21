@@ -7,9 +7,20 @@ import scala.util.parsing.combinator.lexical.StdLexical
 import scala.util.parsing.combinator.PackratParsers
 
 sealed trait Value
+case object `Unit` extends Value
 case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
 case class Text(underlying: String) extends Value
+
+object ValuePrinter {
+  def print(value: Value): String =
+    value match {
+      case `Unit` => ""
+      case Bool(v) => v.toString
+      case Number(v) => v.toString
+      case Text(v) => v
+    }
+}
 
 sealed trait Expression
 case class Variable(name: String) extends Expression

@@ -20,24 +20,20 @@ case class Static(content: String) extends Block
 case class Template(blocks: List[Block])
 
 object StatementEvaluator {
-  def eval(stmt: Statement): Contexted[String] =
+  def eval(stmt: Statement): Contexted[Value] =
     stmt match {
       case Assignment(name, expr) =>
-        push(name, expr).map(_ => "")
+        push(name, expr).map(_ =>`Unit`)
 
       case Return(expr) =>
-        ExpressionEvaluator.eval(expr).flatMap {
-          case Bool(v) => result(v.toString)
-          case Number(v) => result(v.toString)
-          case Text(v) => result(v)
-        }
+        ExpressionEvaluator.eval(expr)
     }
 }
 
 object TemplateEvaluator {
   def eval(template: Template): Contexted[String] =
     template.blocks.foldMapM {
-      case Term(stmt) => StatementEvaluator.eval(stmt)
+      case Term(stmt) => StatementEvaluator.eval(stmt).map(ValuePrinter.print)
       case Static(content) => result(content)
     }
 }
