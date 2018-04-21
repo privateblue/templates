@@ -34,8 +34,8 @@ object StatementEvaluator {
     }
 }
 
-object TemplateCompiler {
-  def compile(template: Template): Contexted[String] =
+object TemplateEvaluator {
+  def eval(template: Template): Contexted[String] =
     template.blocks.foldMapM {
       case Term(stmt) => StatementEvaluator.eval(stmt)
       case Static(content) => result(content)
