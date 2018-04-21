@@ -5069,48 +5069,79 @@ $h_Ltemplates_UI$.prototype = $c_Ltemplates_UI$.prototype;
 $c_Ltemplates_UI$.prototype.init___ = (function() {
   return this
 });
-$c_Ltemplates_UI$.prototype.render__T__T = (function(source) {
+$c_Ltemplates_UI$.prototype.render__sci_List__T__T = (function(context, source) {
   $m_Ltemplates_package$();
-  var res = $m_Ltemplates_TemplateParser$().parse__T__s_util_Either(source);
-  var this$3 = $m_Lcats_data_package$StateT$();
+  var jsx$7 = $m_Lcats_data_package$StateT$();
   var this$2 = $m_Lcats_implicits$();
-  var F = new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$2);
-  var jsx$4 = $f_Lcats_data_CommonStateTConstructors__liftF__O__Lcats_Applicative__Lcats_data_IndexedStateT(this$3, res, F);
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
-    return (function(parsed$2) {
-      var parsed = $as_Ltemplates_Template(parsed$2);
-      var jsx$3 = $m_Ltemplates_TemplateEvaluator$().eval__Ltemplates_Template__Lcats_data_IndexedStateT(parsed);
+  var jsx$6 = jsx$7.set__O__Lcats_Applicative__Lcats_data_IndexedStateT(context, new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$2));
+  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, source$1) {
+    return (function(_$2) {
+      $asUnit(_$2);
+      $m_Ltemplates_package$();
+      var res = $m_Ltemplates_TemplateParser$().parse__T__s_util_Either(source$1);
+      var this$5 = $m_Lcats_data_package$StateT$();
+      var this$4 = $m_Lcats_implicits$();
+      var F = new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$4);
+      var jsx$5 = $f_Lcats_data_CommonStateTConstructors__liftF__O__Lcats_Applicative__Lcats_data_IndexedStateT(this$5, res, F);
       var jsx$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1) {
-        return (function(compiled$2) {
-          var compiled = $as_T(compiled$2);
-          return compiled
+        return (function(parsed$2) {
+          var parsed = $as_Ltemplates_Template(parsed$2);
+          var jsx$4 = $m_Ltemplates_TemplateEvaluator$().eval__Ltemplates_Template__Lcats_data_IndexedStateT(parsed);
+          var jsx$3 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$2) {
+            return (function(compiled$2) {
+              var compiled = $as_T(compiled$2);
+              return compiled
+            })
+          })($this$1));
+          var this$6 = $m_Lcats_implicits$();
+          return jsx$4.map__F1__Lcats_Functor__Lcats_data_IndexedStateT(jsx$3, new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$6))
         })
       })($this));
-      var this$4 = $m_Lcats_implicits$();
-      return jsx$3.map__F1__Lcats_Functor__Lcats_data_IndexedStateT(jsx$2, new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$4))
+      var this$7 = $m_Lcats_implicits$();
+      return jsx$5.flatMap__F1__Lcats_FlatMap__Lcats_data_IndexedStateT(jsx$2, new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$7))
     })
-  })(this));
-  var this$5 = $m_Lcats_implicits$();
-  var rendered = jsx$4.flatMap__F1__Lcats_FlatMap__Lcats_data_IndexedStateT(jsx$1, new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$5));
+  })(this, source));
+  var this$8 = $m_Lcats_implicits$();
+  var rendered = jsx$6.flatMap__F1__Lcats_FlatMap__Lcats_data_IndexedStateT(jsx$1, new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$8));
   $m_Lcats_implicits$();
   new $c_Lcats_kernel_instances_ListMonoid().init___();
-  var this$7 = $m_Lcats_implicits$();
-  var F$1 = new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$7);
-  var this$8 = $as_s_util_Either(rendered.runA__O__Lcats_FlatMap__O($m_sci_Nil$(), F$1));
-  if ($is_s_util_Right(this$8)) {
-    var x2 = $as_s_util_Right(this$8);
+  var this$10 = $m_Lcats_implicits$();
+  var F$1 = new $c_Lcats_instances_EitherInstances$$anon$1().init___Lcats_instances_EitherInstances(this$10);
+  var this$11 = $as_s_util_Either(rendered.runA__O__Lcats_FlatMap__O($m_sci_Nil$(), F$1));
+  if ($is_s_util_Right(this$11)) {
+    var x2 = $as_s_util_Right(this$11);
     var b = x2.value$2;
     var x = $as_T(b);
     return x
   } else {
-    if ((!$is_s_util_Left(this$8))) {
-      throw new $c_s_MatchError().init___O(this$8)
+    if ((!$is_s_util_Left(this$11))) {
+      throw new $c_s_MatchError().init___O(this$11)
     };
-    var x3 = $as_s_util_Left(this$8);
+    var x3 = $as_s_util_Left(this$11);
     var a = x3.value$2;
     var x$1 = $as_Ltemplates_package$LanguageError(a);
     return x$1.msg__T()
   }
+});
+$c_Ltemplates_UI$.prototype.render__sjs_js_Array__sjs_js_Array = (function(sources) {
+  var array = [];
+  var x1 = $uI(sources.length);
+  switch (x1) {
+    case (-1): {
+      break
+    }
+  };
+  var i = 0;
+  var len = $uI(sources.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = sources[index];
+    var source = $as_T(arg1);
+    var elem = $m_Ltemplates_UI$().render__sci_List__T__T($m_Ltemplates_package$().EmptyContext$1, source);
+    array.push(elem);
+    i = ((1 + i) | 0)
+  };
+  return array
 });
 var $d_Ltemplates_UI$ = new $TypeData().initClass({
   Ltemplates_UI$: 0
@@ -45893,8 +45924,8 @@ function $m_Lcats_implicits$() {
   return $n_Lcats_implicits$
 }
 $e.render = (function(arg$1) {
-  var prep0 = $as_T(arg$1);
-  return $m_Ltemplates_UI$().render__T__T(prep0)
+  var prep0 = arg$1;
+  return $m_Ltemplates_UI$().render__sjs_js_Array__sjs_js_Array(prep0)
 });
 }).call(this);
 //# sourceMappingURL=templates-fastopt.js.map
