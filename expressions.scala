@@ -11,6 +11,7 @@ case object `Unit` extends Value
 case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
 case class Text(underlying: String) extends Value
+case class Module(template: Template) extends Value
 
 object ValuePrinter {
   def print(value: Value): String =
@@ -19,6 +20,7 @@ object ValuePrinter {
       case Bool(v) => v.toString
       case Number(v) => v.toString
       case Text(v) => v
+      case Module(_) => ""
     }
 }
 
@@ -31,6 +33,7 @@ case class Add(left: Expression, right: Expression) extends Expression
 case class Mult(left: Expression, right: Expression) extends Expression
 case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
+case class Import(module: Expression) extends Expression
 
 object ExpressionEvaluator {
   def eval(expr: Expression): Contexted[Value] =
@@ -95,6 +98,20 @@ object ExpressionEvaluator {
           case Bool(b) => result(Bool(!b))
           case _ => error(TypeError("Bool expected in Not"))
         }
+
+      case Import(expr) =>
+        for {
+          module <- eval(expr)
+          ctx1 <- get
+          _ <- set(EmptyContext)
+          _ <- module match {
+            case Module(tmpl) => TemplateEvaluator.eval(tmpl)
+            case _ => error(TypeError("Module expected in Import"))
+          }
+          ctx2 <- get
+          _ <- set(ctx1)
+          _ <- merge(ctx2)
+        } yield `Unit`
     }
 }
 
@@ -103,7 +120,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
 
   val lexical = new StdLexical
   lexical.delimiters ++= Seq("(", ")", "=", "+", "*")
-  lexical.reserved += ("if", "then", "else", "true", "false", "and", "not")
+  lexical.reserved += ("if", "then", "else", "true", "false", "import", "and", "not")
 
   def parse(str: String): Result[Expression] = {
     val tokens = new lexical.Scanner(str)
@@ -114,7 +131,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   }
 
   lazy val expression: PackratParser[Expression] =
-    conditional | not | add | mult | and | assignment | variable | `val` | parens
+    conditional | not | `import` | add | mult | and | assignment | variable | `val` | parens
 
   lazy val conditional: PackratParser[If] =
     "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
@@ -124,6 +141,11 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   lazy val not: PackratParser[Not] =
     "not" ~ expression ^^ {
       case _ ~ expr => Not(expr)
+    }
+
+  lazy val `import`: PackratParser[Import] =
+    "import" ~ expression ^^ {
+      case _ ~ expr => Import(expr)
     }
 
   lazy val add: PackratParser[Add] =
