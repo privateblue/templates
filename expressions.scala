@@ -11,6 +11,7 @@ case object `Unit` extends Value
 case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
 case class Text(underlying: String) extends Value
+case class Function(params: List[String], body: Expression) extends Value
 
 object ValuePrinter {
   def print(value: Value): String =
@@ -19,6 +20,7 @@ object ValuePrinter {
       case Bool(v) => v.toString
       case Number(v) => v.toString
       case Text(v) => v
+      case Function(ps, b) => ps.mkString("(", ", ", ") => ...")
     }
 }
 
@@ -31,6 +33,7 @@ case class Add(left: Expression, right: Expression) extends Expression
 case class Mult(left: Expression, right: Expression) extends Expression
 case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
+case class Apply(fn: Expression, arguments: List[Assignment]) extends Expression
 
 object ExpressionEvaluator {
   def eval(expr: Expression): Contexted[Value] =
@@ -95,6 +98,19 @@ object ExpressionEvaluator {
           case Bool(b) => result(Bool(!b))
           case _ => error(TypeError("Bool expected in Not"))
         }
+
+      case Apply(expr, args) =>
+        for {
+          fn <- eval(expr)
+          ctx1 <- get
+          body <- fn match {
+            case Function(ps, b) if ps.size == args.size && ps.forall(p => args.exists(_.name == p)) => result(b)
+            case _ => error(TypeError("Function with matching parameters and arguments expected in Apply"))
+          }
+          _ <- args.traverse_(eval)
+          result <- eval(body)
+          _ <- set(ctx1)
+        } yield result
     }
 }
 
@@ -102,7 +118,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   type Tokens = StdLexical
 
   val lexical = new StdLexical
-  lexical.delimiters ++= Seq("(", ")", "=", "+", "*")
+  lexical.delimiters ++= Seq("(", ")", "=", "+", "*", ",", "=>")
   lexical.reserved += ("if", "then", "else", "true", "false", "and", "not")
 
   def parse(str: String): Result[Expression] = {
@@ -114,7 +130,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   }
 
   lazy val expression: PackratParser[Expression] =
-    conditional | not | add | mult | and | assignment | variable | `val` | parens
+    conditional | not | add | mult | and | application | assignment | variable | `val` | parens
 
   lazy val conditional: PackratParser[If] =
     "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
@@ -146,6 +162,11 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
       case name ~ "=" ~ expr => Assignment(name, expr)
     }
 
+  lazy val application: PackratParser[Apply] =
+    expression ~ "(" ~ repsep(assignment, ",") ~ ")" ^^ {
+      case fn ~ _ ~ args ~ _ => Apply(fn, args)
+    }
+
   lazy val variable: PackratParser[Variable] =
     ident ^^ Variable.apply
 
@@ -156,7 +177,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
     "(" ~> expression <~ ")"
 
   lazy val value: PackratParser[Value] =
-    bool | number | text
+    function | bool | number | text
 
   lazy val text: PackratParser[Text] =
     stringLit ^^ Text.apply
@@ -172,4 +193,9 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
 
   lazy val boolF: PackratParser[Bool] =
     "false" ^^ { _ => Bool(false) }
+
+  lazy val function: PackratParser[Function] =
+    "(" ~ repsep(ident, ",") ~ ")" ~ "=>" ~ expression ^^ {
+      case _ ~ params ~ _ ~ _ ~ body => Function(params, body)
+    }
 }
