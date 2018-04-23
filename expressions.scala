@@ -12,6 +12,7 @@ case object `Unit` extends Value
 case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
 case class Text(underlying: String) extends Value
+case class Module(template: Template) extends Value
 case class Function(params: List[String], body: Expression) extends Value
 
 object ValuePrinter {
@@ -21,6 +22,7 @@ object ValuePrinter {
       case Bool(v) => v.toString
       case Number(v) => v.toString
       case Text(v) => v
+      case Module(_) => ""
       case Function(ps, b) => ps.mkString("(", ", ", ") => ...")
     }
 }
@@ -34,6 +36,7 @@ case class Add(left: Expression, right: Expression) extends Expression
 case class Mult(left: Expression, right: Expression) extends Expression
 case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
+case class Render(module: Expression) extends Expression
 case class Apply(fn: Expression, arguments: List[Assignment]) extends Expression
 
 object ExpressionEvaluator {
@@ -99,6 +102,17 @@ object ExpressionEvaluator {
           case Bool(b) => result(Bool(!b))
           case _ => error(TypeError("Bool expected in Not"))
         }
+
+      case Render(expr) =>
+        for {
+          module <- eval(expr)
+          ctx1 <- get
+          rendered <- module match {
+            case Module(template) => TemplateEvaluator.eval(template)
+            case _ => error(TypeError("Module expected in Render"))
+          }
+          _ <- set(ctx1)
+        } yield Text(rendered)
 
       case Apply(expr, args) =>
         for {
