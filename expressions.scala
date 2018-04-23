@@ -1,5 +1,6 @@
 package templates
 
+import cats._
 import cats.implicits._
 
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
@@ -112,6 +113,20 @@ object ExpressionEvaluator {
           _ <- set(ctx1)
         } yield result
     }
+
+    def fold[T: Monoid](expr: Expression)(v: Variable => T)(a: Assignment => T): T =
+      expr match {
+        case variable @ Variable(name) => v(variable)
+        case assignment @ Assignment(name, expr) => Monoid[T].combine(a(assignment), fold(expr)(v)(a))
+        case Val(_) => Monoid[T].empty
+        case If(cond, yes, no) => Monoid[T].combine(Monoid[T].combine(fold(cond)(v)(a), fold(yes)(v)(a)), fold(no)(v)(a))
+        case Add(left, right) => Monoid[T].combine(fold(left)(v)(a), fold(right)(v)(a))
+        case Mult(left, right) => Monoid[T].combine(fold(left)(v)(a), fold(right)(v)(a))
+        case And(left, right) => Monoid[T].combine(fold(left)(v)(a), fold(right)(v)(a))
+        case Not(expr) => fold(expr)(v)(a)
+        case Render(expr) => fold(expr)(v)(a)
+        case Apply(expr, args) => Monoid[T].combine(fold(expr)(v)(a), args.foldMap(fold(_)(v)(a)))
+      }
 }
 
 object ExpressionParser extends StdTokenParsers with PackratParsers {
