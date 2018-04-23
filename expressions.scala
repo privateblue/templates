@@ -102,15 +102,10 @@ object ExpressionEvaluator {
       case Import(expr) =>
         for {
           module <- eval(expr)
-          ctx1 <- get
-          _ <- set(EmptyContext)
           _ <- module match {
-            case Module(tmpl) => TemplateEvaluator.eval(tmpl)
+            case Module(tmpl) => TemplateEvaluator.eval(tmpl) // imported template is evaluated with current runtime context, so it might capture values from local scope
             case _ => error(TypeError("Module expected in Import"))
           }
-          ctx2 <- get
-          _ <- set(ctx1)
-          _ <- merge(ctx2)
         } yield `Unit`
     }
 }
