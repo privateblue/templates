@@ -10,7 +10,14 @@ object UI {
   def render(sources: js.Array[String]): js.Array[String] = {
     val parsed = sources.map(TemplateParser.parse)
     val context = parsed.toList.zipWithIndex.collect {
-      case (Right(t), i) => s"template$i" -> Val(Module(t))
+      case (Right(t), i) =>
+        val name = s"template$i"
+        val module = Val(Module(t))
+        val used = TemplateEvaluator.fold(t)(v => Set(v.name))(_ => Set.empty[String])
+        val defined = TemplateEvaluator.fold(t)(v => Set.empty[String])(a => Set(a.name))
+        val unbound = used &~ defined
+        if (unbound.isEmpty) name -> module
+        else name -> Val(Function(unbound.toList, Render(module)))
     }
     parsed.map(_.fold(_.msg, render(context)))
   }

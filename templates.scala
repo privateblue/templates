@@ -3,6 +3,7 @@ package templates
 import org.parboiled2._
 import org.parboiled2.Parser.DeliveryScheme.Either
 
+import cats._
 import cats.implicits._
 
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
@@ -20,6 +21,12 @@ object TemplateEvaluator {
     template.blocks.foldMapM {
       case Term(expr) => ExpressionEvaluator.eval(expr).map(ValuePrinter.print)
       case Static(content) => result(content)
+    }
+
+  def fold[T: Monoid](template: Template)(v: Variable => T)(a: Assignment => T): T =
+    template.blocks.foldMap {
+      case Term(expr) => ExpressionEvaluator.fold(expr)(v)(a)
+      case Static(content) => Monoid[T].empty
     }
 }
 

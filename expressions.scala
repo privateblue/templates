@@ -1,5 +1,6 @@
 package templates
 
+import cats._
 import cats.implicits._
 
 import scala.util.parsing.combinator.syntactical.StdTokenParsers
@@ -12,6 +13,7 @@ case class Bool(underlying: Boolean) extends Value
 case class Number(underlying: Int) extends Value
 case class Text(underlying: String) extends Value
 case class Module(template: Template) extends Value
+case class Function(params: List[String], body: Expression) extends Value
 
 object ValuePrinter {
   def print(value: Value): String =
@@ -21,6 +23,7 @@ object ValuePrinter {
       case Number(v) => v.toString
       case Text(v) => v
       case Module(_) => ""
+      case Function(ps, b) => ps.mkString("(", ", ", ") => ...")
     }
 }
 
@@ -33,7 +36,9 @@ case class Add(left: Expression, right: Expression) extends Expression
 case class Mult(left: Expression, right: Expression) extends Expression
 case class And(left: Expression, right: Expression) extends Expression
 case class Not(expr: Expression) extends Expression
+case class Render(module: Expression) extends Expression
 case class Import(module: Expression) extends Expression
+case class Apply(fn: Expression, arguments: List[Assignment]) extends Expression
 
 object ExpressionEvaluator {
   def eval(expr: Expression): Contexted[Value] =
@@ -99,15 +104,46 @@ object ExpressionEvaluator {
           case _ => error(TypeError("Bool expected in Not"))
         }
 
-      case Import(expr) =>
+      case Render(expr) =>
         for {
           module <- eval(expr)
-          _ <- module match {
-            case Module(tmpl) => TemplateEvaluator.eval(tmpl) // imported template is evaluated with current runtime context, so it might capture values from local scope
-            case _ => error(TypeError("Module expected in Import"))
+          rendered <- module match {
+            case Module(template) => TemplateEvaluator.eval(template)
+            case _ => error(TypeError("Module expected in Render"))
           }
-        } yield `Unit`
+        } yield Text(rendered)
+
+      case Import(expr) =>
+        eval(Render(expr)).map(_ => `Unit`)
+
+      case Apply(expr, args) =>
+        for {
+          fn <- eval(expr)
+          ctx1 <- get
+          body <- fn match {
+            case Function(ps, b) if ps.size == args.size && ps.forall(p => args.exists(_.name == p)) => result(b)
+            case _ => error(TypeError("Function with matching parameters and arguments expected in Apply"))
+          }
+          _ <- args.traverse_(eval)
+          result <- eval(body)
+          _ <- set(ctx1)
+        } yield result
     }
+
+    def fold[T: Monoid](expr: Expression)(v: Variable => T)(a: Assignment => T): T =
+      expr match {
+        case variable @ Variable(name) => v(variable)
+        case assignment @ Assignment(name, expr) => Monoid[T].combine(a(assignment), fold(expr)(v)(a))
+        case Val(_) => Monoid[T].empty
+        case If(cond, yes, no) => Monoid[T].combine(Monoid[T].combine(fold(cond)(v)(a), fold(yes)(v)(a)), fold(no)(v)(a))
+        case Add(left, right) => Monoid[T].combine(fold(left)(v)(a), fold(right)(v)(a))
+        case Mult(left, right) => Monoid[T].combine(fold(left)(v)(a), fold(right)(v)(a))
+        case And(left, right) => Monoid[T].combine(fold(left)(v)(a), fold(right)(v)(a))
+        case Not(expr) => fold(expr)(v)(a)
+        case Render(expr) => fold(expr)(v)(a)
+        case Import(expr) => fold(expr)(v)(a)
+        case Apply(expr, args) => Monoid[T].combine(fold(expr)(v)(a), args.foldMap(fold(_)(v)(a)))
+      }
 }
 
 object ExpressionParser extends StdTokenParsers with PackratParsers {
@@ -126,7 +162,7 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   }
 
   lazy val expression: PackratParser[Expression] =
-    conditional | not | `import` | add | mult | and | assignment | variable | `val` | parens
+    conditional | not | `import` | add | mult | and | application | assignment | variable | `val` | parens
 
   lazy val conditional: PackratParser[If] =
     "if" ~ expression ~ "then" ~ expression ~ "else" ~ expression ^^ {
@@ -161,6 +197,11 @@ object ExpressionParser extends StdTokenParsers with PackratParsers {
   lazy val assignment: PackratParser[Assignment] =
     ident ~ "=" ~ expression ^^ {
       case name ~ "=" ~ expr => Assignment(name, expr)
+    }
+
+  lazy val application: PackratParser[Apply] =
+    expression ~ "(" ~ repsep(assignment, ",") ~ ")" ^^ {
+      case fn ~ _ ~ args ~ _ => Apply(fn, args)
     }
 
   lazy val variable: PackratParser[Variable] =
